@@ -1,2112 +1,1151 @@
-<!DOCTYPE html>     
+<!DOCTYPE html>
 <html lang="uz">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram O'zbekcha - Multimedia Video Web Platform</title>
-    <!-- Tailwind CSS -->
+    <title>UZUM SHOP — Zamonaviy Onlayn Marketpleys</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class', 
             theme: {
                 extend: {
-                    colors: {
-                        insta: {
-                            pink: '#E1306C',
-                            purple: '#833AB4',
-                            orange: '#F77737',
-                            yellow: '#FCAF45',
-                            red: '#FD1D1D',
-                            blue: '#0095F6',
-                            dark: '#000000',
-                            cardDark: '#121212',
-                            borderDark: '#262626'
-                        }
-                    },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif']
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        uzum: {
+                            DEFAULT: '#7000FF',
+                            dark: '#5800CC',
+                            light: '#F3EBFF',
+                            yellow: '#FFFF00',
+                            yellowDark: '#F2E600',
+                            surface: '#F4F5F5',
+                            ink: '#1F2026',
+                            muted: '#8B8E99'
+                        }
                     }
                 }
             }
         }
     </script>
-    <!-- React & ReactDOM CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel standalone for inline JSX execution -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom scrollbars */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #a8a8a8;
-            border-radius: 10px;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #363636;
-        }
-        
-        /* Story gradient ring */
-        .story-ring {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-        }
-
-        /* Heart pop animation */
-        @keyframes heartPop {
-            0% { transform: scale(0) rotate(-15deg); opacity: 0; }
-            50% { transform: scale(1.3) rotate(0deg); opacity: 0.9; }
-            100% { transform: scale(1) rotate(0deg); opacity: 0; }
-        }
-        .animate-heart-pop {
-            animation: heartPop 0.8s ease-in-out forwards;
-        }
-
-        /* Story progress bar animation */
-        @keyframes storyProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        .animate-progress {
-            animation: storyProgress 5s linear forwards;
-        }
-
-        /* Disc Spin Animation for Reels */
-        @keyframes spinSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-disc {
-            animation: spinSlow 3s linear infinite;
-        }
-
-        /* Hide scrollbars for snap scrolling elements */
+        /* Gorizontal skrollni yashirish uchun yordamchi klass */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.97) translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-animate {
+            animation: modalFadeIn 0.2s ease-out forwards;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-black dark:text-gray-100 min-h-screen transition-colors duration-200 antialiased selection:bg-pink-500 selection:text-white">
 
-    <div id="root">
-        <!-- Immediate fallback while JS initializes -->
-        <div className="min-h-screen flex items-center justify-center bg-black text-white p-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
-                <i className="fa-brands fa-instagram text-6xl text-pink-500 animate-pulse"></i>
-                <p className="text-sm font-semibold tracking-wide text-gray-400">Instagram Web Yüklanmoqda...</p>
+<body class="bg-uzum-surface text-uzum-ink font-sans antialiased selection:bg-uzum selection:text-white">
+
+    <!-- Yuqori ma'lumot paneli (Top Bar) -->
+    <div class="bg-[#F0F2F5] text-xs text-uzum-ink border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <svg class="w-3.5 h-3.5 text-uzum shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="text-gray-600">Shahar:</span>
+                    <select id="citySelector" onchange="handleCityChange(this.value)"
+                        class="bg-transparent font-semibold text-uzum-ink underline decoration-dotted cursor-pointer focus:outline-none">
+                        <option value="Toshkent" selected>Toshkent</option>
+                        <option value="Samarqand">Samarqand</option>
+                        <option value="Buxoro">Buxoro</option>
+                        <option value="Farg'ona">Farg'ona</option>
+                        <option value="Andijon">Andijon</option>
+                    </select>
+                </div>
+                <span class="hidden md:inline text-gray-500 hover:text-uzum-ink cursor-pointer truncate"
+                    onclick="showToast('Toshkent bo‘ylab 40+ topshirish punkti ishlamoqda')">
+                    Topshirish punktlari
+                </span>
+            </div>
+
+            <div class="hidden lg:block text-uzum-muted font-medium">
+                Buyurtmangizni 1 kunda bepul yetkazib beramiz!
+            </div>
+
+            <div class="flex items-center gap-3 sm:gap-4 font-medium shrink-0">
+                <button type="button" onclick="showToast('Savol-javob: 24/7 qo‘llab-quvvatlash markazi ishlamoqda')"
+                    class="text-gray-700 hover:text-uzum transition cursor-pointer">
+                    Savol-javob
+                </button>
+                <button type="button" onclick="openOrdersModal()"
+                    class="text-uzum hover:text-uzum-dark font-semibold transition cursor-pointer">
+                    Buyurtmalarim
+                </button>
             </div>
         </div>
     </div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+    <!-- Asosiy yopishqoq sarlavha (Sticky Header) -->
+    <header class="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center gap-2.5 sm:gap-4">
+            <!-- Brend logotipi -->
+            <a href="#catalogSection" onclick="resetFilters()" class="flex items-center gap-2.5 shrink-0 group">
+                <div
+                    class="w-9 h-9 rounded-full bg-uzum flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-uzum/25 group-hover:scale-105 transition">
+                    U
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-uzum">uzum <span
+                            class="text-uzum-ink font-bold">shop</span></span>
+                    <span class="text-[10px] font-semibold text-uzum-muted tracking-wider uppercase">marketpleys</span>
+                </div>
+            </a>
 
-        // --- Fast Reliable Public MP4 Streams ---
-        const SAMPLE_VIDEOS = {
-            blazes: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-            escapes: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-            fun: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-            joyrides: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-            meltdowns: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-            bunny: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            elephants: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-            sintel: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-            tears: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-            subaru: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutback2012.mp4',
-            bullrun: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
-            car: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4'
-        };
+            <!-- Katalog tugmasi -->
+            <div class="relative shrink-0">
+                <button type="button" id="catalogBtn" onclick="toggleCatalogMenu()"
+                    class="flex items-center gap-2 bg-uzum-light hover:bg-[#E7D8FF] text-uzum font-semibold px-3 sm:px-4 py-2.5 rounded-xl transition cursor-pointer">
+                    <svg id="catalogIconMenu" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h10" />
+                    </svg>
+                    <svg id="catalogIconClose" class="w-5 h-5 hidden" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <span class="hidden sm:inline text-sm">Katalog</span>
+                </button>
 
-        // --- Video & Photo Stories ---
-        const initialStories = [
+                <!-- Katalog ochiluvchi menyusi -->
+                <div id="catalogDropdown"
+                    class="hidden absolute left-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50">
+                    <div class="px-3 py-2 text-xs font-bold uppercase tracking-wider text-uzum-muted">Bo'limlarni
+                        tanlang</div>
+                    <button type="button" onclick="selectCategoryFromMenu('all')"
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-uzum-light hover:text-uzum text-sm font-medium transition cursor-pointer">
+                        <span>🔥 Barcha mahsulotlar</span>
+                        <span class="text-xs text-gray-400">12</span>
+                    </button>
+                    <button type="button" onclick="selectCategoryFromMenu('smartphones')"
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-uzum-light hover:text-uzum text-sm font-medium transition cursor-pointer">
+                        <span>📱 Smartfonlar</span>
+                        <span class="text-xs text-gray-400">3</span>
+                    </button>
+                    <button type="button" onclick="selectCategoryFromMenu('laptops')"
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-uzum-light hover:text-uzum text-sm font-medium transition cursor-pointer">
+                        <span>💻 Noutbuklar</span>
+                        <span class="text-xs text-gray-400">2</span>
+                    </button>
+                    <button type="button" onclick="selectCategoryFromMenu('audio')"
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-uzum-light hover:text-uzum text-sm font-medium transition cursor-pointer">
+                        <span>🎧 Aksessuarlar</span>
+                        <span class="text-xs text-gray-400">3</span>
+                    </button>
+                    <button type="button" onclick="selectCategoryFromMenu('clothes')"
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-uzum-light hover:text-uzum text-sm font-medium transition cursor-pointer">
+                        <span>👕 Kiyimlar</span>
+                        <span class="text-xs text-gray-400">2</span>
+                    </button>
+                    <button type="button" onclick="selectCategoryFromMenu('home')"
+                        class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-uzum-light hover:text-uzum text-sm font-medium transition cursor-pointer">
+                        <span>🏠 Uy-ro'zg'or</span>
+                        <span class="text-xs text-gray-400">2</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Jonli qidiruv maydoni -->
+            <div
+                class="flex-1 flex items-center border border-gray-300 focus-within:border-uzum focus-within:ring-2 focus-within:ring-uzum/15 rounded-xl overflow-hidden bg-white h-10 sm:h-11 transition min-w-0">
+                <input type="text" id="searchInput" oninput="renderProducts()"
+                    placeholder="Mahsulotlar va turkumlar izlash..."
+                    class="w-full px-3.5 text-sm text-uzum-ink placeholder-uzum-muted focus:outline-none">
+                <button type="button" onclick="focusSearchAndScroll()" aria-label="Qidirish"
+                    class="px-3.5 h-full bg-[#F2F4F7] hover:bg-[#E5E8ED] text-gray-600 transition cursor-pointer shrink-0">
+                    🔍
+                </button>
+            </div>
+
+            <!-- Saralangan va Savat tugmalari -->
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <button type="button" id="wishlistFilterBtn" onclick="toggleWishlistView()"
+                    class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-2.5 rounded-xl hover:bg-gray-100 transition relative cursor-pointer">
+                    <svg id="headerHeartIcon" class="w-5 h-5 text-uzum-ink" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span class="hidden md:inline text-sm font-medium">Saralangan</span>
+                    <span id="wishlistBadge"
+                        class="bg-uzum text-white text-[11px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">0</span>
+                </button>
+
+                <button type="button" onclick="openCartDrawer()"
+                    class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-2.5 rounded-xl hover:bg-gray-100 transition relative cursor-pointer">
+                    <svg class="w-5 h-5 text-uzum-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span class="hidden md:inline text-sm font-medium">Savat</span>
+                    <span id="cartBadge"
+                        class="bg-uzum text-white text-[11px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Kategoriyalar filtrlari paneli -->
+        <nav class="bg-white border-t border-gray-100" aria-label="Kategoriyalar">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto no-scrollbar"
+                id="categoryTabs">
+                <button type="button" data-cat="all" onclick="selectCategoryTab('all')"
+                    class="cat-tab px-3.5 py-1.5 rounded-xl text-sm font-semibold bg-uzum-light text-uzum whitespace-nowrap transition cursor-pointer">Barcha
+                    mahsulotlar</button>
+                <button type="button" data-cat="smartphones" onclick="selectCategoryTab('smartphones')"
+                    class="cat-tab px-3.5 py-1.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 whitespace-nowrap transition cursor-pointer">Smartfonlar</button>
+                <button type="button" data-cat="laptops" onclick="selectCategoryTab('laptops')"
+                    class="cat-tab px-3.5 py-1.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 whitespace-nowrap transition cursor-pointer">Noutbuklar</button>
+                <button type="button" data-cat="audio" onclick="selectCategoryTab('audio')"
+                    class="cat-tab px-3.5 py-1.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 whitespace-nowrap transition cursor-pointer">Aksessuarlar</button>
+                <button type="button" data-cat="clothes" onclick="selectCategoryTab('clothes')"
+                    class="cat-tab px-3.5 py-1.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 whitespace-nowrap transition cursor-pointer">Kiyimlar</button>
+                <button type="button" data-cat="home" onclick="selectCategoryTab('home')"
+                    class="cat-tab px-3.5 py-1.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 whitespace-nowrap transition cursor-pointer">Uy-ro'zg'or</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Asosiy kontent -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+
+        <!-- Binafsha Hero Banner -->
+        <section
+            class="relative rounded-3xl overflow-hidden shadow-lg mb-8 bg-gradient-to-r from-[#7000FF] via-[#8425FF] to-[#4C00B0] text-white">
+            <div class="px-6 py-8 sm:px-12 sm:py-11 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="max-w-xl text-center md:text-left">
+                    <span
+                        class="inline-block bg-uzum-yellow text-uzum-ink text-xs font-extrabold px-3 py-1 rounded-lg mb-3 shadow-xs">
+                        UZUM NASIYA • 12 OYGACHA MUDDATLI TO'LOV
+                    </span>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold leading-tight mb-3">
+                        Zamonaviy texnika va kiyimlar endi yanada qulay narxda!
+                    </h1>
+                    <p class="text-sm sm:text-base text-purple-100 mb-6">
+                        Toshkent bo‘ylab tezkor yetkazib berish, original mahsulotlar va <strong
+                            class="text-white">UZUM10</strong> promo-kodi bilan 10% chegirma.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                        <a href="#catalogSection"
+                            class="inline-block bg-white hover:bg-purple-50 text-uzum font-bold text-sm px-6 py-3 rounded-xl shadow-md transition">
+                            Xaridni boshlash
+                        </a>
+                        <button type="button" onclick="applyPromoFromHero()"
+                            class="inline-block bg-uzum-yellow hover:bg-uzum-yellowDark text-uzum-ink font-bold text-sm px-5 py-3 rounded-xl shadow-md transition cursor-pointer">
+                            UZUM10 promo-kodini qo'llash
+                        </button>
+                    </div>
+                </div>
+
+                <div
+                    class="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-white/10 backdrop-blur-xs border border-white/20 flex flex-col items-center justify-center shrink-0 p-4 text-center">
+                    <svg viewBox="0 0 100 100" class="w-20 h-20 sm:w-24 sm:h-24 mb-1 drop-shadow-md">
+                        <rect x="20" y="32" width="60" height="48" rx="10" fill="#FFFF00" />
+                        <path d="M35 32 V24 A15 15 0 0 1 65 24 V32" fill="none" stroke="#FFFFFF" stroke-width="5"
+                            stroke-linecap="round" />
+                        <circle cx="50" cy="56" r="10" fill="#7000FF" />
+                    </svg>
+                    <span class="text-xs font-extrabold tracking-wide text-uzum-yellow">1 KUNDA YETKAZISH</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mahsulotlar bo'limi -->
+        <section id="catalogSection">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <h2 id="gridHeading" class="text-xl sm:text-2xl font-extrabold text-uzum-ink">Mashhur mahsulotlar
+                    </h2>
+                    <span id="productCountLabel"
+                        class="text-xs font-semibold bg-white px-3 py-1 rounded-lg text-uzum-muted border border-gray-200">12
+                        ta tovar</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-uzum-muted hidden sm:inline">Saralash:</span>
+                    <select id="sortSelect" onchange="renderProducts()"
+                        class="bg-white border border-gray-200 rounded-xl px-3.5 py-2 text-sm font-medium text-uzum-ink focus:outline-none focus:border-uzum cursor-pointer">
+                        <option value="popular">Ommabop</option>
+                        <option value="price-asc">Arzonroq</option>
+                        <option value="price-desc">Qimmatroq</option>
+                        <option value="rating">Yuqori reyting</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Mahsulot kartochkalari to'ri -->
+            <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
+                <!-- Mahsulotlar JS orqali render qilinadi -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div
+                        class="w-8 h-8 rounded-full bg-uzum text-white font-extrabold flex items-center justify-center">
+                        U</div>
+                    <span class="text-xl font-extrabold text-uzum">uzum <span class="text-uzum-ink">shop</span></span>
+                </div>
+                <p class="text-xs text-uzum-muted leading-relaxed">
+                    Toshkent va butun O‘zbekiston bo‘ylab tez yetkazib berish va 12 oygacha muddatli to‘lov xizmati.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm mb-3">Biz haqimizda</h4>
+                <ul class="space-y-2 text-xs text-uzum-muted">
+                    <li onclick="showToast('Topshirish punktlari: Chilonzor, Yunusobod, Sergeli, Mirzo Ulug‘bek')"
+                        class="hover:text-uzum cursor-pointer">Topshirish punktlari</li>
+                    <li onclick="showToast('Uzum Nasiya: 3, 6 va 12 oylik qulay muddatli to‘lov')"
+                        class="hover:text-uzum cursor-pointer">Uzum Nasiya shartlari</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm mb-3">Xaridorlarga</h4>
+                <ul class="space-y-2 text-xs text-uzum-muted">
+                    <li onclick="showToast('Yetkazib berish: 1 ish kuni ichida bepul')"
+                        class="hover:text-uzum cursor-pointer">Yetkazib berish</li>
+                    <li onclick="showToast('Tovarni 10 kun ichida qaytarish yoki almashtirish mumkin')"
+                        class="hover:text-uzum cursor-pointer">Tovarni qaytarish</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm mb-3">To'lov usullari</h4>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1.5 rounded-lg bg-[#F2F4F7] text-xs font-bold text-uzum-ink">Uzcard</span>
+                    <span class="px-3 py-1.5 rounded-lg bg-[#F2F4F7] text-xs font-bold text-uzum-ink">Humo</span>
+                    <span class="px-3 py-1.5 rounded-lg bg-uzum-yellow text-xs font-extrabold text-uzum-ink">Uzum
+                        Nasiya</span>
+                    <span class="px-3 py-1.5 rounded-lg bg-[#F2F4F7] text-xs font-bold text-uzum-ink">Naqd pul</span>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-100 py-4 text-center text-xs text-uzum-muted">
+            © 2026 UZUM SHOP. Barcha huquqlar himoyalangan.
+        </div>
+    </footer>
+
+    <!-- Savatcha yon paneli (Slide-out Cart Drawer) -->
+    <div id="cartDrawerOverlay" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex justify-end">
+        <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
+            <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-extrabold text-uzum-ink">Savatingiz <span id="drawerCountLabel"
+                            class="text-uzum">(0)</span></h3>
+                    <p class="text-xs text-green-600 font-medium">✓ Toshkent bo'ylab 1 kunda yetkazib berish</p>
+                </div>
+                <button type="button" onclick="closeCartDrawer()"
+                    class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold cursor-pointer">✕</button>
+            </div>
+
+            <div id="cartItemsList" class="flex-1 overflow-y-auto p-5 space-y-4">
+                <!-- Savatdagi mahsulotlar JS orqali yuklanadi -->
+            </div>
+
+            <div class="p-5 border-t border-gray-100 bg-[#FAFAFC] space-y-3.5">
+                <div class="flex gap-2">
+                    <input type="text" id="promoInput" placeholder="Promo-kod (masalan: UZUM10)"
+                        class="flex-1 bg-white border border-gray-200 rounded-xl px-3.5 py-2 text-sm uppercase focus:outline-none focus:border-uzum">
+                    <button type="button" onclick="applyPromoCode()"
+                        class="bg-uzum-light hover:bg-[#E6D6FF] text-uzum font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                        Qo'llash
+                    </button>
+                </div>
+                <div id="promoStatusMsg" class="hidden text-xs font-semibold text-green-600"></div>
+
+                <div class="space-y-1.5 text-sm">
+                    <div class="flex justify-between text-uzum-muted">
+                        <span>Mahsulotlar summasi:</span>
+                        <span id="cartSubtotalText">0 so'm</span>
+                    </div>
+                    <div id="cartDiscountRow" class="hidden flex justify-between text-green-600 font-semibold">
+                        <span>Chegirma (UZUM10 -10%):</span>
+                        <span id="cartDiscountText">-0 so'm</span>
+                    </div>
+                    <div
+                        class="flex justify-between text-base font-extrabold text-uzum-ink pt-1.5 border-t border-gray-200">
+                        <span>Jami to'lov:</span>
+                        <span id="cartTotalText" class="text-uzum">0 so'm</span>
+                    </div>
+                </div>
+
+                <button type="button" onclick="openCheckoutModal()"
+                    class="w-full bg-uzum hover:bg-uzum-dark text-white font-bold py-3.5 rounded-xl shadow-lg shadow-uzum/25 transition cursor-pointer">
+                    Buyurtmani rasmiylashtirish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sodda Buyurtmani Rasmiylashtirish Oynasi (Checkout Modal) -->
+    <div id="checkoutModal"
+        class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative modal-animate">
+            <button type="button" onclick="closeCheckoutModal()"
+                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold cursor-pointer">✕</button>
+            <h3 class="text-xl font-extrabold text-uzum-ink mb-1">Buyurtmani rasmiylashtirish</h3>
+            <p class="text-xs text-uzum-muted mb-5">Ism, telefon raqam, topshirish punkti va to'lov usulini tanlang</p>
+
+            <form id="checkoutForm" onsubmit="submitOrder(event)" class="space-y-3.5">
+                <div>
+                    <label for="customerName" class="block text-xs font-bold text-gray-700 mb-1">Xaridor ismi</label>
+                    <input type="text" id="customerName" required placeholder="Masalan: Azizbek Karimov"
+                        class="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-uzum">
+                </div>
+
+                <div>
+                    <label for="customerPhone" class="block text-xs font-bold text-gray-700 mb-1">Telefon raqami</label>
+                    <input type="tel" id="customerPhone" required placeholder="+998 90 123 45 67"
+                        class="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-uzum">
+                </div>
+
+                <div>
+                    <label for="pickupPoint" class="block text-xs font-bold text-gray-700 mb-1">Topshirish punkti
+                        (Toshkent)</label>
+                    <select id="pickupPoint"
+                        class="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-uzum">
+                        <option value="Chilonzor topshirish punkti (Toshkent)">📍 Chilonzor topshirish punkti</option>
+                        <option value="Yunusobod topshirish punkti (Toshkent)">📍 Yunusobod topshirish punkti</option>
+                        <option value="Mirzo Ulug'bek topshirish punkti (Toshkent)">📍 Mirzo Ulug'bek topshirish punkti
+                        </option>
+                        <option value="Sergeli topshirish punkti (Toshkent)">📍 Sergeli topshirish punkti</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="paymentMethod" class="block text-xs font-bold text-gray-700 mb-1">To'lov usuli</label>
+                    <select id="paymentMethod"
+                        class="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-uzum">
+                        <option value="Uzcard / Humo">💳 Uzcard / Humo</option>
+                        <option value="Uzum Nasiya">🟡 Uzum Nasiya</option>
+                        <option value="Naqd pul">💵 Naqd pul</option>
+                    </select>
+                </div>
+
+                <div class="bg-uzum-light rounded-2xl p-3.5 flex items-center justify-between">
+                    <span class="text-xs font-semibold text-uzum-ink">Jami to'lov summasi:</span>
+                    <span id="checkoutFinalTotal" class="text-base font-extrabold text-uzum">0 so'm</span>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-uzum hover:bg-uzum-dark text-white font-bold py-3.5 rounded-xl shadow-lg shadow-uzum/25 transition cursor-pointer">
+                    Buyurtmani tasdiqlash
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Buyurtmalar tarixi oynasi (Orders Modal) -->
+    <div id="ordersModal"
+        class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+            class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative modal-animate max-h-[85vh] flex flex-col">
+            <button type="button" onclick="closeOrdersModal()"
+                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold cursor-pointer">✕</button>
+            <h3 class="text-lg font-extrabold text-uzum-ink mb-3">Buyurtmalarim</h3>
+            <div id="ordersListContainer" class="overflow-y-auto space-y-3 text-sm">
+                <!-- Buyurtmalar JS orqali ko'rsatiladi -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Xabarnoma (Toast) -->
+    <div id="toastNotification"
+        class="fixed bottom-5 right-5 z-50 translate-y-20 opacity-0 pointer-events-none transition-all duration-300 bg-uzum-ink text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-medium max-w-sm">
+        <span class="w-2.5 h-2.5 rounded-full bg-uzum-yellow shrink-0"></span>
+        <span id="toastText">Xabar</span>
+    </div>
+
+    <script>
+        // Mahsulotlar katalogi (UZS so'mda narxlar va SVG tasvirlar)
+        const productsData = [
             {
                 id: 1,
-                username: 'sobirov_ui',
-                avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.blazes,
-                time: '30daq oldin',
-                hasUnseen: true
+                title: "Smartfon Samsung Galaxy S24 Ultra 12/256GB Titanium",
+                category: "smartphones",
+                price: 13890000,
+                oldPrice: 15600000,
+                rating: 4.9,
+                reviews: 418,
+                discount: "-11%",
+                bgGrad: "from-slate-100 to-indigo-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="34" y="12" width="52" height="96" rx="9" fill="#1E293B" stroke="#64748B" stroke-width="2.5"/>
+                        <rect x="38" y="17" width="44" height="86" rx="6" fill="url(#s24grad)"/>
+                        <circle cx="48" cy="27" r="3.5" fill="#0F172A"/>
+                        <circle cx="48" cy="37" r="3.5" fill="#0F172A"/>
+                        <circle cx="48" cy="47" r="3.5" fill="#0F172A"/>
+                        <defs><linearGradient id="s24grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7000FF"/><stop offset="100%" stop-color="#38BDF8"/></linearGradient></defs>
+                      </svg>`
             },
             {
                 id: 2,
-                username: 'it_park_uz',
-                avatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.fun,
-                time: '1 soat oldin',
-                hasUnseen: true
+                title: "Noutbuk Apple MacBook Air 13 M2 8/256GB Midnight",
+                category: "laptops",
+                price: 12450000,
+                oldPrice: 14100000,
+                rating: 5.0,
+                reviews: 295,
+                discount: "-12%",
+                bgGrad: "from-purple-50 to-slate-100",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="20" y="24" width="80" height="54" rx="5" fill="#1E1B4B"/>
+                        <rect x="24" y="28" width="72" height="46" rx="3" fill="url(#macGrad)"/>
+                        <path d="M10 78 H110 L104 86 H16 Z" fill="#94A3B8"/>
+                        <defs><linearGradient id="macGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#9333EA"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs>
+                      </svg>`
             },
             {
                 id: 3,
-                username: 'samarqand_live',
-                avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.joyrides,
-                time: '2 soat oldin',
-                hasUnseen: true
+                title: "Simsiz quloqchinlar Apple AirPods Pro 2 USB-C",
+                category: "audio",
+                price: 2890000,
+                oldPrice: 3450000,
+                rating: 4.8,
+                reviews: 612,
+                discount: "-16%",
+                bgGrad: "from-gray-100 to-purple-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="30" y="34" width="60" height="54" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2.5"/>
+                        <line x1="30" y1="54" x2="90" y2="54" stroke="#CBD5E1" stroke-width="2"/>
+                        <circle cx="60" cy="67" r="3" fill="#22C55E"/>
+                      </svg>`
             },
             {
                 id: 4,
-                username: 'shoxrux_travel',
-                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.escapes,
-                time: '4 soat oldin',
-                hasUnseen: true
+                title: "Erkaklar krossovkasi Nike Air Force 1 '07 White",
+                category: "clothes",
+                price: 1150000,
+                oldPrice: 1490000,
+                rating: 4.8,
+                reviews: 340,
+                discount: "-23%",
+                bgGrad: "from-amber-50 to-orange-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <path d="M18 76 C18 62 34 56 48 52 L64 40 L76 54 C88 58 102 64 102 76 L100 84 H18 Z" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+                        <rect x="17" y="78" width="85" height="9" rx="4" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5"/>
+                        <path d="M42 68 Q62 72 82 58 Q68 76 42 68 Z" fill="#7000FF"/>
+                      </svg>`
             },
             {
                 id: 5,
-                username: 'chimgan_resort',
-                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.meltdowns,
-                time: '6 soat oldin',
-                hasUnseen: true
+                title: "Smartfon iPhone 15 Pro Max 256GB Natural Titanium",
+                category: "smartphones",
+                price: 15290000,
+                oldPrice: 16900000,
+                rating: 5.0,
+                reviews: 524,
+                discount: "-10%",
+                bgGrad: "from-stone-100 to-purple-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="34" y="12" width="52" height="96" rx="11" fill="#78716C" stroke="#57534E" stroke-width="2.5"/>
+                        <rect x="38" y="16" width="44" height="88" rx="8" fill="#1C1917"/>
+                        <circle cx="48" cy="27" r="4" fill="#292524" stroke="#A8A29E" stroke-width="1"/>
+                        <circle cx="48" cy="37" r="4" fill="#292524" stroke="#A8A29E" stroke-width="1"/>
+                      </svg>`
             },
             {
                 id: 6,
-                username: 'buxoro_vlog',
-                avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.bunny,
-                time: '8 soat oldin',
-                hasUnseen: false
+                title: "Aqlli soat Apple Watch Series 9 45mm Midnight",
+                category: "audio",
+                price: 4950000,
+                oldPrice: 5600000,
+                rating: 4.9,
+                reviews: 187,
+                discount: "-12%",
+                bgGrad: "from-blue-50 to-indigo-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="47" y="12" width="26" height="96" rx="6" fill="#334155"/>
+                        <rect x="37" y="32" width="46" height="56" rx="12" fill="#0F172A" stroke="#64748B" stroke-width="2"/>
+                        <circle cx="60" cy="60" r="13" fill="none" stroke="#7000FF" stroke-width="3.5"/>
+                      </svg>`
+            },
+            {
+                id: 7,
+                title: "O'yin noutbuki Lenovo LOQ 15 RTX 4060 16/512GB",
+                category: "laptops",
+                price: 11200000,
+                oldPrice: 12900000,
+                rating: 4.9,
+                reviews: 143,
+                discount: "-13%",
+                bgGrad: "from-cyan-50 to-slate-100",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="18" y="24" width="84" height="54" rx="4" fill="#0F172A"/>
+                        <rect x="22" y="28" width="76" height="46" rx="2" fill="#1E293B"/>
+                        <polygon points="60,36 74,64 46,64" fill="#06B6D4"/>
+                        <path d="M10 78 H110 L105 87 H15 Z" fill="#334155"/>
+                      </svg>`
+            },
+            {
+                id: 8,
+                title: "Qahva mashinasi DeLonghi Magnifica S Avtomat",
+                category: "home",
+                price: 5400000,
+                oldPrice: 6500000,
+                rating: 4.8,
+                reviews: 96,
+                discount: "-17%",
+                bgGrad: "from-orange-50 to-stone-100",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="32" y="18" width="56" height="84" rx="8" fill="#1E293B"/>
+                        <rect x="42" y="54" width="36" height="34" rx="4" fill="#0F172A"/>
+                        <rect x="52" y="68" width="16" height="18" rx="3" fill="#FFFFFF"/>
+                        <circle cx="48" cy="32" r="3" fill="#FFFF00"/>
+                      </svg>`
+            },
+            {
+                id: 9,
+                title: "Smartfon Xiaomi Redmi Note 13 Pro+ 5G 12/512GB",
+                category: "smartphones",
+                price: 4490000,
+                oldPrice: 5200000,
+                rating: 4.7,
+                reviews: 389,
+                discount: "-14%",
+                bgGrad: "from-violet-50 to-fuchsia-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="34" y="12" width="52" height="96" rx="9" fill="#6D28D9"/>
+                        <rect x="38" y="16" width="44" height="88" rx="7" fill="#EDE9FE"/>
+                        <circle cx="50" cy="30" r="6" fill="#1E1B4B"/>
+                        <circle cx="68" cy="30" r="6" fill="#1E1B4B"/>
+                      </svg>`
+            },
+            {
+                id: 10,
+                title: "Qishki erkaklar kurtkasi Oversize Windproof",
+                category: "clothes",
+                price: 680000,
+                oldPrice: 950000,
+                rating: 4.6,
+                reviews: 275,
+                discount: "-28%",
+                bgGrad: "from-emerald-50 to-teal-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <path d="M36 26 L60 22 L84 26 L98 54 L86 60 L80 44 V96 H40 V44 L34 60 L22 54 Z" fill="#1E293B"/>
+                        <line x1="60" y1="24" x2="60" y2="96" stroke="#94A3B8" stroke-width="2"/>
+                      </svg>`
+            },
+            {
+                id: 11,
+                title: "Robot changyutgich Xiaomi Robot Vacuum S10+",
+                category: "home",
+                price: 3650000,
+                oldPrice: 4300000,
+                rating: 4.8,
+                reviews: 211,
+                discount: "-15%",
+                bgGrad: "from-sky-50 to-gray-100",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <circle cx="60" cy="60" r="40" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="3"/>
+                        <circle cx="60" cy="60" r="32" fill="#F8FAFC"/>
+                        <circle cx="60" cy="52" r="8" fill="#1E293B"/>
+                        <circle cx="60" cy="52" r="3" fill="#7000FF"/>
+                      </svg>`
+            },
+            {
+                id: 12,
+                title: "Simsiz o'yin sichqonchasi Logitech G Pro X Superlight",
+                category: "audio",
+                price: 1690000,
+                oldPrice: 2050000,
+                rating: 4.9,
+                reviews: 178,
+                discount: "-18%",
+                bgGrad: "from-purple-50 to-pink-50",
+                svg: `<svg viewBox="0 0 120 120" class="w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <rect x="40" y="20" width="40" height="80" rx="20" fill="#1E293B" stroke="#7000FF" stroke-width="2.5"/>
+                        <rect x="57" y="30" width="6" height="14" rx="3" fill="#FFFF00"/>
+                      </svg>`
             }
         ];
 
-        // --- Feed Posts ---
-        const initialPosts = [
-            {
-                id: 'post_v1',
-                username: 'it_park_uz',
-                userAvatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
-                location: 'IT Park Tashkent, O\'zbekiston',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.escapes,
-                posterUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1000&auto=format&fit=crop&q=80',
-                duration: '0:15',
-                likesCount: 8420,
-                isLiked: true,
-                isSaved: true,
-                caption: 'Toshkent IT Park innovatsion markazida yangi Sun\'iy Intellekt va Startap loyihalar ko\'rgazmasi bo\'lib o\'tmoqda! 🚀💻 Videoni tomosha qiling!',
-                timeAgo: '1 SOAT OLDIN',
-                comments: [
-                    { id: 101, username: 'jasur_dev', text: 'Taqdimotlar va texnologik muhit fantastik! 🔥', time: '45daq' },
-                    { id: 102, username: 'sobirov_ui', text: 'Tashkillashtirishga gap bo\'lishi mumkin emas 💯', time: '20daq' }
-                ]
-            },
-            {
-                id: 'post_v2',
-                username: 'shoxrux_travel',
-                userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-                location: 'Chimyon va Amirsoy Tog\'lari',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.meltdowns,
-                posterUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1000&auto=format&fit=crop&q=80',
-                duration: '0:22',
-                likesCount: 12450,
-                isLiked: false,
-                isSaved: false,
-                caption: 'Tog\' etaklarida dam olish kunlari va tabiat bag\'ridagi unutilmas lahzalar 🏔️🍃 #travel #uzbekistan #chimgan',
-                timeAgo: '3 SOAT OLDIN',
-                comments: [
-                    { id: 103, username: 'dilnoza_m', text: 'Havo juda tiniq ko\'rinadi, albatta boramiz!', time: '1s' }
-                ]
-            },
-            {
-                id: 'post_v3',
-                username: 'samarqand_live',
-                userAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-                location: 'Samarqand, Registon Maydoni',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.joyrides,
-                posterUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1000&auto=format&fit=crop&q=80',
-                duration: '0:18',
-                likesCount: 19800,
-                isLiked: true,
-                isSaved: true,
-                caption: 'Tungi Samarqand va Registon maydonining maftunkor chiroqlari ✨🇺🇿 Shahrimiz go\'zalligini birgalikda tomosha qilaylik!',
-                timeAgo: '5 SOAT OLDIN',
-                comments: [
-                    { id: 104, username: 'jasur_dev', text: 'O\'zbekiston durdonasi! ❤️', time: '3s' }
-                ]
-            },
-            {
-                id: 'post_v4',
-                username: 'sobirov_ui',
-                userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
-                location: 'Tashkent Digital Lab',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.blazes,
-                posterUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&auto=format&fit=crop&q=80',
-                duration: '0:25',
-                likesCount: 6310,
-                isLiked: false,
-                isSaved: false,
-                caption: 'Web & Mobile ilovalarda dinamik videolarni joylash va yuqori unumdorlikka erishish sirlari ⚡🎨 #frontend #react #design',
-                timeAgo: '8 SOAT OLDIN',
-                comments: []
-            },
-            {
-                id: 'post_v5',
-                username: 'buxoro_vlog',
-                userAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-                location: 'Buxoro, Poyi Kalon majmuasi',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.bunny,
-                posterUrl: 'https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=1000&auto=format&fit=crop&q=80',
-                duration: '0:30',
-                likesCount: 15900,
-                isLiked: true,
-                isSaved: false,
-                caption: 'Qadimiy Buxoro ko\'chalari bo\'ylab sayohat va tarixiy me\'morchilik san\'ati 🕌📜',
-                timeAgo: '1 KUN OLDIN',
-                comments: [
-                    { id: 105, username: 'shoxrux_travel', text: 'Buxoroning milliy taomlari va somsalari alohida mavzu! 😋', time: '12s' }
-                ]
-            },
-            {
-                id: 'post_v6',
-                username: 'auto_uzbekistan',
-                userAvatar: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=150&auto=format&fit=crop&q=80',
-                location: 'Tashkent Auto Show 2026',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.subaru,
-                posterUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1000&auto=format&fit=crop&q=80',
-                duration: '0:28',
-                likesCount: 22400,
-                isLiked: false,
-                isSaved: true,
-                caption: 'Yangi avtomobillar va elektromobillar test-drayvi! Toshkent yo\'llarida yangi modellar namoyishi 🏎️⚡',
-                timeAgo: '1 KUN OLDIN',
-                comments: []
-            },
-            {
-                id: 'post_v7',
-                username: 'khiva_ancient',
-                userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-                location: 'Xiva, Ichan Qal\'a',
-                type: 'video',
-                mediaUrl: SAMPLE_VIDEOS.sintel,
-                posterUrl: 'https://images.unsplash.com/photo-1528181304800-259b08848526?w=1000&auto=format&fit=crop&q=80',
-                duration: '0:35',
-                likesCount: 18200,
-                isLiked: true,
-                isSaved: false,
-                caption: 'Ochiq osmon ostidagi muzey - Ichan Qal\'a afsonalari va kechki sahnalar 🏛️✨',
-                timeAgo: '2 KUN OLDIN',
-                comments: []
-            },
-            {
-                id: 'post_p1',
-                username: 'fergana_nature',
-                userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-                location: 'Farg\'ona vodiysi va Sox',
-                type: 'image',
-                mediaUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1000&auto=format&fit=crop&q=80',
-                likesCount: 9400,
-                isLiked: false,
-                isSaved: false,
-                caption: 'Farg\'ona vodiysining betakror bog\'lari va bahoriy tabiat manzaralari 🌸🍃',
-                timeAgo: '2 KUN OLDIN',
-                comments: []
-            }
-        ];
+        const categoryNames = {
+            all: "Mashhur mahsulotlar",
+            smartphones: "Smartfonlar",
+            laptops: "Noutbuklar",
+            audio: "Aksessuarlar",
+            clothes: "Kiyimlar",
+            home: "Uy-ro'zg'or"
+        };
 
-        // --- 10 Dedicated Reels Streams ---
-        const initialReels = [
-            {
-                id: 'reel_1',
-                username: 'jasur_dev',
-                userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-                videoUrl: SAMPLE_VIDEOS.blazes,
-                likes: '34.2K',
-                comments: '1,240',
-                shares: '5.8K',
-                audioTrack: 'Jasur Dev • React 18 & Tailwind CSS Masterclass',
-                caption: 'Web ilovada full-screen Reels pleyeri va 60fps tezlikdagi HTML5 videolarni ishga tushirish! ⚡💻 #reactjs #webdev',
-                isLiked: true,
-                isFollowing: true
-            },
-            {
-                id: 'reel_2',
-                username: 'shoxrux_travel',
-                userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-                videoUrl: SAMPLE_VIDEOS.escapes,
-                likes: '89.5K',
-                comments: '3,110',
-                shares: '14.2K',
-                audioTrack: 'Shoxrux Travel • O\'zbekiston bo\'ylab sayohat musiqa',
-                caption: 'Chorvoq suv omborida paraplan uchish va adrenalin lahzalari 🪂🌊 Tog\'lar go\'zalligi!',
-                isLiked: true,
-                isFollowing: true
-            },
-            {
-                id: 'reel_3',
-                username: 'sobirov_ui',
-                userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
-                videoUrl: SAMPLE_VIDEOS.joyrides,
-                likes: '45.1K',
-                comments: '1,890',
-                shares: '8.3K',
-                audioTrack: 'Sobirov UI • UI/UX Motion Effects Trends 2026',
-                caption: 'Mobil va web interfeyslarda smooth animation hamda interaktiv menyular tayyorlash 🎨🚀',
-                isLiked: false,
-                isFollowing: false
-            },
-            {
-                id: 'reel_4',
-                username: 'it_park_uz',
-                userAvatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150',
-                videoUrl: SAMPLE_VIDEOS.fun,
-                likes: '112.4K',
-                comments: '4,500',
-                shares: '21.5K',
-                audioTrack: 'IT Park Uzbekistan • Texnologiyalar Kelajagi',
-                caption: 'O\'zbekiston IT eksporti va yosh dasturchilar uchun xalqaro imkoniyatlar 🇺🇿🌐',
-                isLiked: true,
-                isFollowing: true
-            },
-            {
-                id: 'reel_5',
-                username: 'samarqand_live',
-                userAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-                videoUrl: SAMPLE_VIDEOS.meltdowns,
-                likes: '67.8K',
-                comments: '2,430',
-                shares: '9.1K',
-                audioTrack: 'Samarqand Sadosi • Sharq Taronalari 2026',
-                caption: 'Samarqand ipak qog\'ozi tayyorlash milliy hunarmandchilik sirlari 📜✨',
-                isLiked: false,
-                isFollowing: false
-            },
-            {
-                id: 'reel_6',
-                username: 'buxoro_vlog',
-                userAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
-                videoUrl: SAMPLE_VIDEOS.bunny,
-                likes: '52.9K',
-                comments: '1,670',
-                shares: '6.4K',
-                audioTrack: 'Buxoro National Vibes • Shashmakom & Ethno Beat',
-                caption: 'Eski Buxoro ko\'chalaridagi mashhur minora va milliy bozorchalar atmosphere 🕌🛍️',
-                isLiked: true,
-                isFollowing: true
-            },
-            {
-                id: 'reel_7',
-                username: 'auto_uzbekistan',
-                userAvatar: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=150',
-                videoUrl: SAMPLE_VIDEOS.subaru,
-                likes: '94.3K',
-                comments: '3,800',
-                shares: '18.9K',
-                audioTrack: 'Tashkent Drift & Speed • Engine Sounds',
-                caption: 'Tog\'li dovonlarda yangi krossover mashinalar poygasi va yo\'ltanlamaslar imkoniyati 🏎️💨',
-                isLiked: false,
-                isFollowing: false
-            },
-            {
-                id: 'reel_8',
-                username: 'khiva_ancient',
-                userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-                videoUrl: SAMPLE_VIDEOS.sintel,
-                likes: '78.1K',
-                comments: '2,900',
-                shares: '11.3K',
-                audioTrack: 'Khiva Historical Legend Soundtrack',
-                caption: 'Xorazm lazgi raqsi va Ichan Qal\'adagi kechki festival konserti 💃🎶',
-                isLiked: true,
-                isFollowing: true
-            },
-            {
-                id: 'reel_9',
-                username: 'cyber_uz',
-                userAvatar: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=150',
-                videoUrl: SAMPLE_VIDEOS.tears,
-                likes: '135.0K',
-                comments: '6,200',
-                shares: '31.0K',
-                audioTrack: 'Cyber Uzbekistan • Esports Arena Sound',
-                caption: 'Toshkent Cyber Arena turniri final janglari va g\'oliblar taqdirlanishi 🎮🏆',
-                isLiked: true,
-                isFollowing: false
-            },
-            {
-                id: 'reel_10',
-                username: 'bullrun_uz',
-                userAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-                videoUrl: SAMPLE_VIDEOS.bullrun,
-                likes: '61.4K',
-                comments: '1,950',
-                shares: '7.8K',
-                audioTrack: 'Extreme Sports Uz • High Energy Beat',
-                caption: 'Katta sport musobaqalari va avto-moto kaskadyorlar shousi 🔥🏍️',
-                isLiked: false,
-                isFollowing: true
-            }
-        ];
+        // Ilova holati (State)
+        let cart = [];
+        let wishlist = [];
+        let orders = [];
+        let activeCategory = "all";
+        let wishlistMode = false;
+        let promoApplied = false;
+        let toastTimer = null;
 
-        const initialSuggestedUsers = [
-            { id: 1, username: 'diyorbek_tech', name: 'Diyorbek Karimov', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', isFollowing: false, subtitle: 'Video kontent ijodkori' },
-            { id: 2, username: 'shaxlo_art', name: 'Shaxlo Zokirova', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', isFollowing: false, subtitle: 'Sizni kuzatmoqda' },
-            { id: 3, username: 'toshkent_life', name: 'Tashkent Daily', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80', isFollowing: false, subtitle: 'Ommabop video kanal' }
-        ];
+        // Narxlarni UZS formatida chiqarish
+        function formatUZS(amount) {
+            return Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " so'm";
+        }
 
-        const initialChats = [
-            {
-                id: 'chat_1',
-                username: 'sobirov_ui',
-                name: 'Otabek Sobirov',
-                avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
-                online: true,
-                messages: [
-                    { id: 1, sender: 'sobirov_ui', text: 'Salom Jasur, yangi Reels videongiz trendga chiqdi-ku! 🚀', time: '10:30' },
-                    { id: 2, sender: 'jasur_dev', text: 'Rahmat Otabek! Video sifatini oshirganimiz va ko\'proq namunalarni qo\'shganimiz juda qo\'l keldi 🔥', time: '10:32' }
-                ]
-            },
-            {
-                id: 'chat_2',
-                username: 'it_park_uz',
-                name: 'IT Park Uzbekistan',
-                avatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
-                online: false,
-                messages: [
-                    { id: 1, sender: 'it_park_uz', text: 'Assalomu alaykum! Yangi video rolik taqdimotini Stories va Reels\'ga joyladik.', time: 'Kecha' }
-                ]
-            }
-        ];
+        // 12 oylik muddatli to'lovni hisoblash
+        function calcMonthly12(price) {
+            return Math.round((price * 1.2) / 12);
+        }
 
-        const initialNotifications = [
-            { id: 1, type: 'like', username: 'sobirov_ui', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', content: 'sizning yangi HD videongizga yoqdi tugmasini bosdi.', time: '5daq', postImage: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=100&auto=format&fit=crop&q=80' },
-            { id: 2, type: 'follow', username: 'diyorbek_tech', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', content: 'sizni kuzatishni boshladi.', time: '1s', isFollowing: false }
-        ];
+        // Toast xabarnomasini ko'rsatish
+        function showToast(message) {
+            const toast = document.getElementById("toastNotification");
+            const toastText = document.getElementById("toastText");
+            toastText.textContent = message;
+            toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
+            toast.classList.add("translate-y-0", "opacity-100");
 
-        // --- MAIN APP COMPONENT ---
-        function App() {
-            const [darkMode, setDarkMode] = useState(true);
-            const [activeTab, setActiveTab] = useState('home'); // home, explore, reels, messages, notifications, profile
-            const [posts, setPosts] = useState(initialPosts);
-            const [reels, setReels] = useState(initialReels);
-            const [stories, setStories] = useState(initialStories);
-            const [suggestedUsers, setSuggestedUsers] = useState(initialSuggestedUsers);
-            const [chats, setChats] = useState(initialChats);
-            const [activeChatId, setActiveChatId] = useState('chat_1');
-            const [notifications, setNotifications] = useState(initialNotifications);
-            
-            // Authenticated User Session via localStorage
-            const [currentUser, setCurrentUser] = useState(() => {
-                try {
-                    const saved = localStorage.getItem('insta_uz_user');
-                    return saved ? JSON.parse(saved) : null;
-                } catch (e) {
-                    return null;
-                }
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove("translate-y-0", "opacity-100");
+                toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
+            }, 2400);
+        }
+
+        function handleCityChange(city) {
+            showToast(`Shahar ${city} etib tanlandi`);
+        }
+
+        // Katalog menyusi boshqaruvi
+        function toggleCatalogMenu() {
+            const dropdown = document.getElementById("catalogDropdown");
+            const iconMenu = document.getElementById("catalogIconMenu");
+            const iconClose = document.getElementById("catalogIconClose");
+            const isHidden = dropdown.classList.contains("hidden");
+
+            dropdown.classList.toggle("hidden", !isHidden);
+            iconMenu.classList.toggle("hidden", isHidden);
+            iconClose.classList.toggle("hidden", !isHidden);
+        }
+
+        function closeCatalogMenu() {
+            document.getElementById("catalogDropdown").classList.add("hidden");
+            document.getElementById("catalogIconMenu").classList.remove("hidden");
+            document.getElementById("catalogIconClose").classList.add("hidden");
+        }
+
+        function selectCategoryFromMenu(cat) {
+            closeCatalogMenu();
+            selectCategoryTab(cat);
+            document.getElementById("catalogSection").scrollIntoView({ behavior: "smooth" });
+        }
+
+        function selectCategoryTab(cat) {
+            wishlistMode = false;
+            activeCategory = cat;
+            updateCategoryTabsUI();
+            updateWishlistHeaderUI();
+            renderProducts();
+        }
+
+        function updateCategoryTabsUI() {
+            document.querySelectorAll(".cat-tab").forEach(tab => {
+                const isActive = !wishlistMode && tab.dataset.cat === activeCategory;
+                tab.className = isActive
+                    ? "cat-tab px-3.5 py-1.5 rounded-xl text-sm font-semibold bg-uzum-light text-uzum whitespace-nowrap transition cursor-pointer"
+                    : "cat-tab px-3.5 py-1.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-100 whitespace-nowrap transition cursor-pointer";
             });
-            
-            // Global Mute State for Feed Videos
-            const [globalMuted, setGlobalMuted] = useState(true);
+        }
 
-            // Search Modal & Explore Lightbox State
-            const [isSearchOpen, setIsSearchOpen] = useState(false);
-            const [searchQuery, setSearchQuery] = useState('');
-            const [exploreActiveMedia, setExploreActiveMedia] = useState(null);
+        function toggleWishlistView() {
+            wishlistMode = !wishlistMode;
+            updateCategoryTabsUI();
+            updateWishlistHeaderUI();
+            renderProducts();
+        }
 
-            // Story Viewer Modal State
-            const [activeStoryIndex, setActiveStoryIndex] = useState(null);
+        function updateWishlistHeaderUI() {
+            const heartIcon = document.getElementById("headerHeartIcon");
+            if (wishlistMode) {
+                heartIcon.setAttribute("fill", "#7000FF");
+                heartIcon.classList.remove("text-uzum-ink");
+                heartIcon.classList.add("text-uzum");
+            } else {
+                heartIcon.setAttribute("fill", "none");
+                heartIcon.classList.remove("text-uzum");
+                heartIcon.classList.add("text-uzum-ink");
+            }
+        }
 
-            // Create Post Modal State
-            const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+        function resetFilters() {
+            activeCategory = "all";
+            wishlistMode = false;
+            document.getElementById("searchInput").value = "";
+            document.getElementById("sortSelect").value = "popular";
+            updateCategoryTabsUI();
+            updateWishlistHeaderUI();
+            renderProducts();
+        }
 
-            useEffect(() => {
-                if (darkMode) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            }, [darkMode]);
+        function focusSearchAndScroll() {
+            const input = document.getElementById("searchInput");
+            input.focus();
+            document.getElementById("catalogSection").scrollIntoView({ behavior: "smooth" });
+        }
 
-            const handleLogin = (userFormData) => {
-                const cleanUsername = `${userFormData.firstName.toLowerCase().trim().replace(/\s+/g, '')}_${userFormData.lastName.toLowerCase().trim().replace(/\s+/g, '')}`;
-                const newUser = {
-                    id: `user_${Date.now()}`,
-                    username: cleanUsername,
-                    firstName: userFormData.firstName.trim(),
-                    lastName: userFormData.lastName.trim(),
-                    name: `${userFormData.firstName.trim()} ${userFormData.lastName.trim()}`,
-                    phone: userFormData.phone.trim(),
-                    email: userFormData.email.trim(),
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-                    bio: '👨‍💻 Senior Fullstack Developer & Content Creator\n🎥 Raqamli texnologiyalar va sayohat blogi\n📍 Toshkent, O\'zbekiston 🇺🇿',
-                    website: 'https://github.com/jasur-dev',
-                    postsCount: 24,
-                    followersCount: '12.8k',
-                    followingCount: 512,
-                    isVerified: true
-                };
-                setCurrentUser(newUser);
-                localStorage.setItem('insta_uz_user', JSON.stringify(newUser));
-            };
+        // Mahsulotlarni filtrlash, saralash va render qilish
+        function renderProducts() {
+            const grid = document.getElementById("productsGrid");
+            const heading = document.getElementById("gridHeading");
+            const countLabel = document.getElementById("productCountLabel");
+            const searchQuery = document.getElementById("searchInput").value.trim().toLowerCase();
+            const sortBy = document.getElementById("sortSelect").value;
 
-            const handleLogout = () => {
-                localStorage.removeItem('insta_uz_user');
-                setCurrentUser(null);
-            };
+            let list = [...productsData];
 
-            const handleToggleLike = (postId) => {
-                setPosts(posts.map(post => {
-                    if (post.id === postId) {
-                        return {
-                            ...post,
-                            isLiked: !post.isLiked,
-                            likesCount: post.isLiked ? post.likesCount - 1 : post.likesCount + 1
-                        };
-                    }
-                    return post;
-                }));
-            };
-
-            const handleToggleSave = (postId) => {
-                setPosts(posts.map(post => {
-                    if (post.id === postId) {
-                        return { ...post, isSaved: !post.isSaved };
-                    }
-                    return post;
-                }));
-            };
-
-            const handleAddComment = (postId, text) => {
-                if (!text.trim()) return;
-                setPosts(posts.map(post => {
-                    if (post.id === postId) {
-                        const newComment = {
-                            id: Date.now(),
-                            username: currentUser.username,
-                            text: text.trim(),
-                            time: 'Hozir'
-                        };
-                        return { ...post, comments: [...post.comments, newComment] };
-                    }
-                    return post;
-                }));
-            };
-
-            const handleToggleFollow = (userId) => {
-                setSuggestedUsers(suggestedUsers.map(user => {
-                    if (user.id === userId) {
-                        return { ...user, isFollowing: !user.isFollowing };
-                    }
-                    return user;
-                }));
-            };
-
-            const handleCreatePost = (newPostData) => {
-                const newPost = {
-                    id: `post_${Date.now()}`,
-                    username: currentUser.username,
-                    userAvatar: currentUser.avatar,
-                    location: newPostData.location || 'Toshkent, O\'zbekiston',
-                    type: newPostData.type,
-                    mediaUrl: newPostData.mediaUrl,
-                    posterUrl: newPostData.type === 'video' ? newPostData.mediaUrl : null,
-                    duration: newPostData.type === 'video' ? '0:20' : null,
-                    likesCount: 1,
-                    isLiked: true,
-                    isSaved: false,
-                    caption: newPostData.caption,
-                    timeAgo: 'HOZIR',
-                    comments: []
-                };
-
-                setPosts([newPost, ...posts]);
-                setCurrentUser(prev => ({ ...prev, postsCount: prev.postsCount + 1 }));
-
-                if (newPostData.type === 'video') {
-                    const newReel = {
-                        id: `reel_${Date.now()}`,
-                        username: currentUser.username,
-                        userAvatar: currentUser.avatar,
-                        videoUrl: newPostData.mediaUrl,
-                        likes: '1',
-                        comments: '0',
-                        shares: '0',
-                        audioTrack: `${currentUser.username} • Original Ovozi`,
-                        caption: newPostData.caption,
-                        isLiked: true,
-                        isFollowing: true
-                    };
-                    setReels([newReel, ...reels]);
-                }
-
-                setIsCreateModalOpen(false);
-            };
-
-            // If not logged in, render Instagram Registration & Login Auth View
-            if (!currentUser) {
-                return (
-                    <AuthScreen 
-                        onLogin={handleLogin} 
-                        darkMode={darkMode} 
-                        setDarkMode={setDarkMode} 
-                    />
-                );
+            if (wishlistMode) {
+                list = list.filter(item => wishlist.includes(item.id));
+                heading.textContent = "Saralangan mahsulotlar";
+            } else if (activeCategory !== "all") {
+                list = list.filter(item => item.category === activeCategory);
+                heading.textContent = categoryNames[activeCategory] || "Mahsulotlar";
+            } else {
+                heading.textContent = "Mashhur mahsulotlar";
             }
 
-            return (
-                <div className="flex flex-col md:flex-row min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100">
-                    
-                    {/* Navigation Sidebar */}
-                    <Sidebar 
-                        activeTab={activeTab} 
-                        setActiveTab={setActiveTab} 
-                        darkMode={darkMode} 
-                        setDarkMode={setDarkMode}
-                        setIsCreateModalOpen={setIsCreateModalOpen}
-                        isSearchOpen={isSearchOpen}
-                        setIsSearchOpen={setIsSearchOpen}
-                        currentUser={currentUser}
-                        handleLogout={handleLogout}
-                    />
+            if (searchQuery) {
+                list = list.filter(item => item.title.toLowerCase().includes(searchQuery));
+            }
 
-                    {/* Main Dynamic Viewport */}
-                    <main className="flex-1 max-w-full overflow-x-hidden pb-16 md:pb-0 md:ml-16 lg:ml-64 transition-all duration-300">
-                        {isSearchOpen && (
-                            <SearchDrawer 
-                                searchQuery={searchQuery}
-                                setSearchQuery={setSearchQuery}
-                                onClose={() => setIsSearchOpen(false)}
-                                suggestedUsers={suggestedUsers}
-                            />
-                        )}
+            if (sortBy === "price-asc") {
+                list.sort((a, b) => a.price - b.price);
+            } else if (sortBy === "price-desc") {
+                list.sort((a, b) => b.price - a.price);
+            } else if (sortBy === "rating") {
+                list.sort((a, b) => b.rating - a.rating);
+            }
 
-                        {activeTab === 'home' && (
-                            <HomeView 
-                                stories={stories} 
-                                setActiveStoryIndex={setActiveStoryIndex}
-                                posts={posts}
-                                handleToggleLike={handleToggleLike}
-                                handleToggleSave={handleToggleSave}
-                                handleAddComment={handleAddComment}
-                                currentUser={currentUser}
-                                suggestedUsers={suggestedUsers}
-                                handleToggleFollow={handleToggleFollow}
-                                globalMuted={globalMuted}
-                                setGlobalMuted={setGlobalMuted}
-                            />
-                        )}
+            countLabel.textContent = `${list.length} ta tovar`;
 
-                        {activeTab === 'explore' && (
-                            <ExploreView 
-                                posts={posts} 
-                                setExploreActiveMedia={setExploreActiveMedia} 
-                            />
-                        )}
-
-                        {activeTab === 'reels' && (
-                            <ReelsView reels={reels} setReels={setReels} />
-                        )}
-
-                        {activeTab === 'messages' && (
-                            <MessagesView 
-                                chats={chats} 
-                                setChats={setChats} 
-                                activeChatId={activeChatId} 
-                                setActiveChatId={setActiveChatId}
-                                currentUser={currentUser}
-                            />
-                        )}
-
-                        {activeTab === 'notifications' && (
-                            <NotificationsView notifications={notifications} />
-                        )}
-
-                        {activeTab === 'profile' && (
-                            <ProfileView 
-                                currentUser={currentUser} 
-                                posts={posts.filter(p => p.username === currentUser.username || p.isSaved)}
-                                allPosts={posts}
-                                setExploreActiveMedia={setExploreActiveMedia}
-                                handleLogout={handleLogout}
-                            />
-                        )}
-                    </main>
-
-                    {/* Modals & Overlays */}
-                    {activeStoryIndex !== null && (
-                        <StoryViewerModal 
-                            stories={stories} 
-                            activeStoryIndex={activeStoryIndex} 
-                            setActiveStoryIndex={setActiveStoryIndex} 
-                        />
-                    )}
-
-                    {isCreateModalOpen && (
-                        <CreatePostModal 
-                            onClose={() => setIsCreateModalOpen(false)}
-                            onCreate={handleCreatePost}
-                        />
-                    )}
-
-                    {exploreActiveMedia && (
-                        <MediaLightboxModal 
-                            media={exploreActiveMedia}
-                            onClose={() => setExploreActiveMedia(null)}
-                        />
-                    )}
-                </div>
-            );
-        }
-
-        // --- AUTHENTICATION SCREEN (Kirish / Ro'yxatdan O'tish) ---
-        function AuthScreen({ onLogin, darkMode, setDarkMode }) {
-            const [firstName, setFirstName] = useState('');
-            const [lastName, setLastName] = useState('');
-            const [phone, setPhone] = useState('+998 ');
-            const [email, setEmail] = useState('');
-            const [errorMsg, setErrorMsg] = useState('');
-
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (!firstName.trim()) {
-                    setErrorMsg('Iltimos, ismingizni kiriting!');
-                    return;
-                }
-                if (!lastName.trim()) {
-                    setErrorMsg('Iltimos, familiyangizni kiriting!');
-                    return;
-                }
-                if (!phone.trim() || phone.trim() === '+998') {
-                    setErrorMsg('Iltimos, telefon raqamingizni kiriting!');
-                    return;
-                }
-                if (!email.trim() || !email.includes('@')) {
-                    setErrorMsg('Iltimos, to\'g\'ri e-mail manzilingizni kiriting!');
-                    return;
-                }
-
-                setErrorMsg('');
-                onLogin({ firstName, lastName, phone, email });
-            };
-
-            const fillDemoData = () => {
-                setFirstName('Jasur');
-                setLastName('Bekmuhammad');
-                setPhone('+998 90 123 45 67');
-                setEmail('jasur.bekmuhammad@gmail.com');
-            };
-
-            return (
-                <div className="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 flex items-center justify-center p-4">
-                    <div className="w-full max-w-4xl flex items-center justify-center gap-12">
-                        
-                        {/* Phone Mockup (Desktop Display) */}
-                        <div className="hidden md:block relative w-[380px] h-[600px]">
-                            <div className="absolute inset-0 bg-gradient-to-tr from-insta-purple via-insta-pink to-insta-orange rounded-[45px] p-2 shadow-2xl">
-                                <div className="w-full h-full bg-black rounded-[38px] overflow-hidden relative border-4 border-black">
-                                    <img 
-                                        src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80" 
-                                        className="w-full h-full object-cover opacity-90" 
-                                        alt="Instagram Preview" 
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 flex flex-col justify-between p-6 text-white">
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-bold text-xl tracking-tight">Instagram</span>
-                                            <i className="fa-solid fa-play text-pink-500"></i>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <div className="inline-block bg-pink-600/90 text-white text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-md">
-                                                 HD Video & Reels Platforma
-                                            </div>
-                                            <h3 className="text-2xl font-bold leading-tight">Do'stlaringiz va videolaringiz bilan bo'lishing</h3>
-                                            <p className="text-xs opacity-80">O'zbekistondagi barcha yangi kontent va do'stlar aloqada.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Login/Signup Form Box */}
-                        <div className="w-full max-w-md space-y-4">
-                            
-                            <div className="bg-white dark:bg-neutral-900 border dark:border-neutral-800 rounded-2xl p-8 shadow-xl space-y-6">
-                                
-                                <div className="text-center space-y-2">
-                                    <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-insta-purple via-insta-pink to-insta-orange bg-clip-text text-transparent">
-                                        Instagram
-                                    </h1>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                                        Hisobingizga kirish uchun ma'lumotlarni to'ldiring
-                                    </p>
-                                </div>
-
-                                {errorMsg && (
-                                    <div className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-xs p-3 rounded-xl flex items-center space-x-2">
-                                        <i className="fa-solid fa-triangle-exclamation text-base"></i>
-                                        <span>{errorMsg}</span>
-                                    </div>
-                                )}
-
-                                <form onSubmit={handleSubmit} className="space-y-3">
-                                    
-                                    <div>
-                                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
-                                            Ism <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <i className="fa-regular fa-user absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
-                                            <input 
-                                                type="text" 
-                                                placeholder="Masalan: Jasur"
-                                                value={firstName}
-                                                onChange={(e) => setFirstName(e.target.value)}
-                                                className="w-full bg-gray-50 dark:bg-neutral-800 border dark:border-neutral-700 pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
-                                            Familiya <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <i className="fa-solid fa-user-tag absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
-                                            <input 
-                                                type="text" 
-                                                placeholder="Masalan: Bekmuhammad"
-                                                value={lastName}
-                                                onChange={(e) => setLastName(e.target.value)}
-                                                className="w-full bg-gray-50 dark:bg-neutral-800 border dark:border-neutral-700 pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
-                                            Telefon raqam <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <i className="fa-solid fa-phone absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
-                                            <input 
-                                                type="tel" 
-                                                placeholder="+998 90 123 45 67"
-                                                value={phone}
-                                                onChange={(e) => setPhone(e.target.value)}
-                                                className="w-full bg-gray-50 dark:bg-neutral-800 border dark:border-neutral-700 pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
-                                            E-mail manzil <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <i className="fa-regular fa-envelope absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
-                                            <input 
-                                                type="email" 
-                                                placeholder="foydalanuvchi@gmail.com"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full bg-gray-50 dark:bg-neutral-800 border dark:border-neutral-700 pl-10 pr-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <button 
-                                        type="submit"
-                                        className="w-full bg-gradient-to-r from-insta-pink via-insta-purple to-insta-orange hover:opacity-95 text-white font-bold py-3 rounded-xl shadow-lg transition transform active:scale-98 mt-2 flex items-center justify-center space-x-2"
-                                    >
-                                        <span>Instagram'ga kirish</span>
-                                        <i className="fa-solid fa-arrow-right text-sm"></i>
-                                    </button>
-                                </form>
-
-                                <div className="pt-2 border-t dark:border-neutral-800 text-center space-y-3">
-                                    <button 
-                                        type="button" 
-                                        onClick={fillDemoData}
-                                        className="text-xs font-semibold text-blue-500 hover:text-blue-700"
-                                    >
-                                        ⚡ Avtomatik to'ldirish (Demo foydalanuvchi)
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Theme switcher footer */}
-                            <div className="flex justify-between items-center text-xs text-gray-500 px-2">
-                                <span>O'zbekcha (O'zbekiston)</span>
-                                <button 
-                                    onClick={() => setDarkMode(!darkMode)} 
-                                    className="flex items-center space-x-1.5 hover:text-black dark:hover:text-white"
-                                >
-                                    <i className={`fa-solid ${darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-indigo-600'}`}></i>
-                                    <span>{darkMode ? 'Kungi rejim' : 'Tungi rejim'}</span>
-                                </button>
-                            </div>
-                        </div>
-
+            if (list.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white rounded-2xl p-10 text-center border border-gray-100">
+                        <p class="text-base font-bold text-uzum-ink mb-1">Mahsulot topilmadi</p>
+                        <p class="text-xs text-uzum-muted mb-4">Qidiruv so‘zini yoki kategoriyani o‘zgartirib ko‘ring.</p>
+                        <button type="button" onclick="resetFilters()" class="bg-uzum text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-uzum-dark transition cursor-pointer">
+                            Filtrlarni tozalash
+                        </button>
                     </div>
-                </div>
-            );
-        }
+                `;
+                return;
+            }
 
-        // --- SIDEBAR COMPONENT ---
-        function Sidebar({ activeTab, setActiveTab, darkMode, setDarkMode, setIsCreateModalOpen, isSearchOpen, setIsSearchOpen, currentUser, handleLogout }) {
-            return (
-                <aside className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-black border-t dark:border-insta-borderDark md:top-0 md:right-auto md:w-16 lg:w-64 md:border-t-0 md:border-r flex flex-row md:flex-col justify-between p-2 lg:p-4 select-none">
-                    
-                    <div className="flex flex-col w-full">
-                        <div className="hidden md:flex items-center px-3 py-4 mb-4">
-                            <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-insta-purple via-insta-pink to-insta-orange bg-clip-text text-transparent hidden lg:block">
-                                Instagram
+            grid.innerHTML = list.map(product => {
+                const monthly = calcMonthly12(product.price);
+                const isWished = wishlist.includes(product.id);
+
+                return `
+                    <article class="bg-white rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-200 flex flex-col border border-gray-100 group">
+                        <div class="relative h-44 sm:h-52 bg-gradient-to-br ${product.bgGrad} flex items-center justify-center p-4">
+                            ${product.svg}
+                            <span class="absolute bottom-2.5 left-2.5 bg-uzum text-white text-[11px] font-extrabold px-2 py-0.5 rounded-md">
+                                ${product.discount}
                             </span>
-                            <i className="fa-brands fa-instagram text-2xl text-pink-600 block lg:hidden mx-auto"></i>
-                        </div>
-
-                        <nav className="flex flex-row md:flex-col justify-around md:justify-start w-full space-y-0 md:space-y-1">
-                            <NavItem 
-                                icon="fa-solid fa-house" 
-                                label="Asosiy" 
-                                active={activeTab === 'home' && !isSearchOpen} 
-                                onClick={() => { setActiveTab('home'); setIsSearchOpen(false); }} 
-                            />
-                            <NavItem 
-                                icon="fa-solid fa-magnifying-glass" 
-                                label="Qidiruv" 
-                                active={isSearchOpen} 
-                                onClick={() => setIsSearchOpen(!isSearchOpen)} 
-                            />
-                            <NavItem 
-                                icon="fa-regular fa-compass" 
-                                label="Kashf etish" 
-                                active={activeTab === 'explore'} 
-                                onClick={() => { setActiveTab('explore'); setIsSearchOpen(false); }} 
-                            />
-                            <NavItem 
-                                icon="fa-solid fa-clapperboard text-pink-500" 
-                                label="Reels (Videolar)" 
-                                badge="10+"
-                                active={activeTab === 'reels'} 
-                                onClick={() => { setActiveTab('reels'); setIsSearchOpen(false); }} 
-                            />
-                            <NavItem 
-                                icon="fa-regular fa-paper-plane" 
-                                label="Xabarlar" 
-                                badge="2"
-                                active={activeTab === 'messages'} 
-                                onClick={() => { setActiveTab('messages'); setIsSearchOpen(false); }} 
-                            />
-                            <NavItem 
-                                icon="fa-regular fa-heart" 
-                                label="Bildirishnomalar" 
-                                active={activeTab === 'notifications'} 
-                                onClick={() => { setActiveTab('notifications'); setIsSearchOpen(false); }} 
-                            />
-                            <NavItem 
-                                icon="fa-regular fa-square-plus" 
-                                label="Yaratish" 
-                                active={false} 
-                                onClick={() => setIsCreateModalOpen(true)} 
-                            />
-                            <button 
-                                onClick={() => { setActiveTab('profile'); setIsSearchOpen(false); }}
-                                className={`flex items-center space-x-4 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-900 transition w-full ${activeTab === 'profile' ? 'font-bold' : ''}`}
-                            >
-                                <img 
-                                    src={currentUser.avatar} 
-                                    alt="Profil" 
-                                    className={`w-6 h-6 rounded-full object-cover border ${activeTab === 'profile' ? 'border-2 border-black dark:border-white' : 'border-gray-300'}`} 
-                                />
-                                <span className="hidden lg:inline text-base truncate">{currentUser.username}</span>
+                            <button type="button" onclick="toggleWishlist(${product.id})" aria-label="Saralanganlarga qo'shish" class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 hover:bg-white shadow-xs flex items-center justify-center transition cursor-pointer">
+                                <svg class="w-4 h-4 ${isWished ? "text-red-500" : "text-gray-400 hover:text-red-400"}" fill="${isWished ? "currentColor" : "none"}" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                </svg>
                             </button>
-                        </nav>
-                    </div>
-
-                    <div className="hidden md:flex flex-col w-full pt-4 border-t dark:border-neutral-800 space-y-1">
-                        <button 
-                            onClick={() => setDarkMode(!darkMode)}
-                            className="flex items-center space-x-4 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-900 transition w-full text-gray-700 dark:text-gray-300"
-                        >
-                            <i className={`fa-solid ${darkMode ? 'fa-sun text-yellow-400' : 'fa-moon text-indigo-600'} text-xl w-6 text-center`}></i>
-                            <span className="hidden lg:inline text-sm font-medium">
-                                {darkMode ? 'Kungi rejim' : 'Tungi rejim'}
-                            </span>
-                        </button>
-
-                        <button 
-                            onClick={handleLogout}
-                            className="flex items-center space-x-4 p-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 transition w-full text-red-500 font-medium"
-                        >
-                            <i className="fa-solid fa-right-from-bracket text-xl w-6 text-center"></i>
-                            <span className="hidden lg:inline text-sm">Chiqish (Logout)</span>
-                        </button>
-                    </div>
-                </aside>
-            );
-        }
-
-        function NavItem({ icon, label, active, onClick, badge }) {
-            return (
-                <button 
-                    onClick={onClick}
-                    className={`relative flex items-center space-x-4 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-900 transition w-full ${active ? 'font-bold text-black dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}
-                >
-                    <div className="relative flex items-center justify-center w-6 text-xl">
-                        <i className={icon}></i>
-                        {badge && (
-                            <span className="absolute -top-1.5 -right-2 bg-pink-600 text-white text-[9px] font-extrabold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center">
-                                {badge}
-                            </span>
-                        )}
-                    </div>
-                    <span className="hidden lg:inline text-base tracking-wide">{label}</span>
-                </button>
-            );
-        }
-
-        // --- SEARCH DRAWER COMPONENT ---
-        function SearchDrawer({ searchQuery, setSearchQuery, onClose, suggestedUsers }) {
-            const filteredUsers = suggestedUsers.filter(u => 
-                u.username.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                u.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-
-            return (
-                <div className="fixed inset-y-0 left-0 md:left-16 lg:left-64 w-full md:w-96 bg-white dark:bg-neutral-900 border-r dark:border-neutral-800 z-30 shadow-2xl p-4 flex flex-col transition-all duration-300">
-                    <div className="flex items-center justify-between pb-4 border-b dark:border-neutral-800">
-                        <h2 className="text-xl font-bold">Qidiruv</h2>
-                        <button onClick={onClose} className="text-gray-500 hover:text-black dark:hover:text-white">
-                            <i className="fa-solid fa-xmark text-xl"></i>
-                        </button>
-                    </div>
-
-                    <div className="my-4 relative">
-                        <i className="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400"></i>
-                        <input 
-                            type="text" 
-                            placeholder="Profil, hashtag yoki video qidirish..." 
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-gray-100 dark:bg-neutral-800 pl-10 pr-4 py-2 rounded-lg focus:outline-none text-sm"
-                        />
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto space-y-3">
-                        {filteredUsers.map(user => (
-                            <div key={user.id} className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-neutral-800/60 rounded-xl cursor-pointer">
-                                <div className="flex items-center space-x-3">
-                                    <img src={user.avatar} className="w-12 h-12 rounded-full object-cover" alt={user.username} />
-                                    <div>
-                                        <p className="font-semibold text-sm leading-tight">{user.username}</p>
-                                        <p className="text-xs text-gray-500">{user.name}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        // --- HOME VIEW COMPONENT ---
-        function HomeView({ stories, setActiveStoryIndex, posts, handleToggleLike, handleToggleSave, handleAddComment, currentUser, suggestedUsers, handleToggleFollow, globalMuted, setGlobalMuted }) {
-            return (
-                <div className="max-w-screen-lg mx-auto pt-4 px-2 sm:px-6 flex justify-center gap-12">
-                    <div className="w-full max-w-xl flex flex-col space-y-6">
-                        
-                        {/* Stories Carousel */}
-                        <div className="bg-white dark:bg-black border dark:border-neutral-800 rounded-2xl p-4 flex space-x-4 overflow-x-auto no-scrollbar shadow-sm">
-                            <div className="flex flex-col items-center space-y-1 cursor-pointer flex-shrink-0">
-                                <div className="relative">
-                                    <img src={currentUser.avatar} className="w-16 h-16 rounded-full object-cover p-0.5 border-2 border-gray-200 dark:border-neutral-700" alt="Mening hikoyam" />
-                                    <span className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs border-2 border-white dark:border-black">+</span>
-                                </div>
-                                <span className="text-xs text-gray-600 dark:text-gray-400 truncate w-16 text-center">Hikoyangiz</span>
-                            </div>
-
-                            {stories.map((story, index) => (
-                                <div 
-                                    key={story.id} 
-                                    onClick={() => setActiveStoryIndex(index)}
-                                    className="flex flex-col items-center space-y-1 cursor-pointer flex-shrink-0 group"
-                                >
-                                    <div className={`p-[2px] rounded-full ${story.hasUnseen ? 'story-ring' : 'bg-gray-300 dark:bg-neutral-700'}`}>
-                                        <div className="bg-white dark:bg-black p-[2px] rounded-full relative">
-                                            <img src={story.avatar} className="w-14 h-14 rounded-full object-cover transform group-hover:scale-105 transition duration-200" alt={story.username} />
-                                            {story.type === 'video' && (
-                                                <span className="absolute bottom-0 right-0 bg-pink-600 text-white rounded-full p-1 text-[9px] flex items-center justify-center shadow">
-                                                    <i className="fa-solid fa-play"></i>
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <span className="text-xs text-gray-800 dark:text-gray-200 truncate w-16 text-center">{story.username}</span>
-                                </div>
-                            ))}
                         </div>
 
-                        {/* Feed Posts */}
-                        <div className="space-y-6">
-                            {posts.map(post => (
-                                <PostCard 
-                                    key={post.id} 
-                                    post={post} 
-                                    onLike={() => handleToggleLike(post.id)}
-                                    onSave={() => handleToggleSave(post.id)}
-                                    onAddComment={(text) => handleAddComment(post.id, text)}
-                                    globalMuted={globalMuted}
-                                    setGlobalMuted={setGlobalMuted}
-                                />
-                            ))}
-                        </div>
-                    </div>
+                        <div class="p-3.5 sm:p-4 flex flex-col flex-1">
+                            <h3 class="text-xs sm:text-sm font-medium text-uzum-ink line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] mb-1.5 group-hover:text-uzum transition">
+                                ${product.title}
+                            </h3>
 
-                    {/* Right Suggestions Bar */}
-                    <div className="hidden lg:block w-80 space-y-6 pt-2">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                <img src={currentUser.avatar} className="w-12 h-12 rounded-full object-cover" alt={currentUser.username} />
-                                <div>
-                                    <p className="font-bold text-sm leading-tight flex items-center gap-1">
-                                        {currentUser.username}
-                                        {currentUser.isVerified && <i className="fa-solid fa-circle-check text-blue-500 text-xs"></i>}
-                                    </p>
-                                    <p className="text-xs text-gray-500">{currentUser.name}</p>
-                                </div>
+                            <div class="flex items-center gap-1 text-xs text-uzum-muted mb-2.5">
+                                <span class="text-amber-400 font-bold">★</span>
+                                <span class="font-semibold text-uzum-ink">${product.rating.toFixed(1)}</span>
+                                <span>(${product.reviews} sharh)</span>
                             </div>
-                            <button className="text-xs font-semibold text-blue-500 hover:text-blue-700">Almashtirish</button>
-                        </div>
 
-                        <div className="flex justify-between items-center text-xs font-semibold">
-                            <span className="text-gray-500">Siz uchun tavsiyalar</span>
-                            <button className="text-gray-900 dark:text-white hover:opacity-70">Barchasi</button>
-                        </div>
-
-                        <div className="space-y-3">
-                            {suggestedUsers.map(user => (
-                                <div key={user.id} className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-3">
-                                        <img src={user.avatar} className="w-9 h-9 rounded-full object-cover" alt={user.username} />
-                                        <div>
-                                            <p className="font-semibold text-xs leading-tight hover:underline cursor-pointer">{user.username}</p>
-                                            <p className="text-[10px] text-gray-400 truncate w-36">{user.subtitle}</p>
-                                        </div>
-                                    </div>
-                                    <button 
-                                        onClick={() => handleToggleFollow(user.id)}
-                                        className={`text-xs font-semibold px-3 py-1 rounded-lg transition ${
-                                            user.isFollowing 
-                                                ? 'bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-gray-200' 
-                                                : 'text-blue-500 hover:text-blue-700'
-                                        }`}
-                                    >
-                                        {user.isFollowing ? 'Kuzatilmoqda' : 'Obuna bo\'lish'}
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // --- POST CARD COMPONENT ---
-        function PostCard({ post, onLike, onSave, onAddComment, globalMuted, setGlobalMuted }) {
-            const [commentInput, setCommentInput] = useState('');
-            const [showBigHeart, setShowBigHeart] = useState(false);
-            const [isPlaying, setIsPlaying] = useState(true);
-            const videoRef = useRef(null);
-            const containerRef = useRef(null);
-            const lastTapRef = useRef(0);
-
-            useEffect(() => {
-                if (post.type !== 'video' || !videoRef.current) return;
-
-                const observer = new IntersectionObserver(
-                    ([entry]) => {
-                        if (entry.isIntersecting) {
-                            videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-                        } else {
-                            videoRef.current.pause();
-                            setIsPlaying(false);
-                        }
-                    },
-                    { threshold: 0.6 }
-                );
-
-                if (containerRef.current) {
-                    observer.observe(containerRef.current);
-                }
-
-                return () => observer.disconnect();
-            }, [post.type]);
-
-            const handleMediaClick = () => {
-                const now = Date.now();
-                const DOUBLE_TAP_DELAY = 300;
-                
-                if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
-                    if (!post.isLiked) onLike();
-                    setShowBigHeart(true);
-                    setTimeout(() => setShowBigHeart(false), 800);
-                } else {
-                    if (post.type === 'video' && videoRef.current) {
-                        if (isPlaying) {
-                            videoRef.current.pause();
-                            setIsPlaying(false);
-                        } else {
-                            videoRef.current.play();
-                            setIsPlaying(true);
-                        }
-                    }
-                }
-                lastTapRef.current = now;
-            };
-
-            const handleSubmitComment = (e) => {
-                e.preventDefault();
-                if (commentInput.trim()) {
-                    onAddComment(commentInput);
-                    setCommentInput('');
-                }
-            };
-
-            return (
-                <div className="bg-white dark:bg-black border dark:border-neutral-800 rounded-2xl shadow-sm overflow-hidden" ref={containerRef}>
-                    
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-3.5 border-b dark:border-neutral-800/50">
-                        <div className="flex items-center space-x-3">
-                            <div className="p-[1.5px] rounded-full story-ring cursor-pointer">
-                                <img src={post.userAvatar} className="w-8 h-8 rounded-full object-cover border border-white dark:border-black" alt={post.username} />
+                            <div class="bg-uzum-yellow text-uzum-ink text-[11px] font-bold px-2.5 py-1 rounded-lg w-fit mb-3">
+                                ${formatUZS(monthly)}/oyiga • 12 oy
                             </div>
-                            <div>
-                                <p className="text-sm font-semibold leading-tight hover:underline cursor-pointer flex items-center gap-1.5">
-                                    {post.username}
-                                    {post.type === 'video' && (
-                                        <span className="text-[10px] bg-pink-600/10 text-pink-600 px-1.5 py-0.5 rounded-full font-bold flex items-center gap-1">
-                                            <i className="fa-solid fa-video text-[9px]"></i> Reel
-                                        </span>
-                                    )}
-                                </p>
-                                <p className="text-xs text-gray-500">{post.location}</p>
-                            </div>
-                        </div>
-                        <button className="text-gray-500 hover:text-black dark:hover:text-white p-1">
-                            <i className="fa-solid fa-ellipsis"></i>
-                        </button>
-                    </div>
 
-                    {/* Media Display */}
-                    <div className="relative bg-black flex items-center justify-center select-none min-h-[320px]" onClick={handleMediaClick}>
-                        {post.type === 'video' ? (
-                            <>
-                                <video 
-                                    ref={videoRef}
-                                    src={post.mediaUrl}
-                                    poster={post.posterUrl}
-                                    loop
-                                    muted={globalMuted}
-                                    playsInline
-                                    className="w-full max-h-[550px] object-cover cursor-pointer"
-                                />
-
-                                <div className="absolute top-3 right-3 flex items-center space-x-2 z-10">
-                                    <button 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setGlobalMuted(!globalMuted);
-                                        }}
-                                        className="bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-xs backdrop-blur-md hover:bg-black/80 transition"
-                                        title={globalMuted ? "Ovozni yoqish" : "Ovozni o'chirish"}
-                                    >
-                                        <i className={`fa-solid ${globalMuted ? 'fa-volume-xmark' : 'fa-volume-high'}`}></i>
-                                    </button>
+                            <div class="mt-auto flex items-end justify-between gap-2">
+                                <div class="min-w-0">
+                                    <span class="block text-[11px] text-uzum-muted line-through truncate">${formatUZS(product.oldPrice)}</span>
+                                    <span class="block text-sm sm:text-base font-extrabold text-uzum-ink truncate">${formatUZS(product.price)}</span>
                                 </div>
 
-                                {!isPlaying && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
-                                        <div className="bg-black/60 text-white rounded-full w-14 h-14 flex items-center justify-center text-2xl backdrop-blur-sm">
-                                            <i className="fa-solid fa-play ml-1"></i>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="absolute bottom-3 left-3 bg-black/60 text-white text-[11px] font-semibold px-2.5 py-1 rounded-md backdrop-blur-sm flex items-center gap-1.5 z-10">
-                                    <i className="fa-solid fa-clapperboard text-pink-400"></i>
-                                    <span>{post.duration || '0:15'}</span>
-                                </div>
-                            </>
-                        ) : (
-                            <img 
-                                src={post.mediaUrl} 
-                                alt="Post content" 
-                                className="w-full max-h-[550px] object-cover cursor-pointer"
-                            />
-                        )}
-
-                        {showBigHeart && (
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                                <i className="fa-solid fa-heart text-white text-8xl drop-shadow-2xl animate-heart-pop"></i>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Action Toolbar */}
-                    <div className="p-3.5 space-y-3">
-                        <div className="flex justify-between items-center text-2xl">
-                            <div className="flex items-center space-x-4">
-                                <button onClick={onLike} className="transition transform active:scale-125">
-                                    <i className={`${post.isLiked ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart hover:text-gray-500'}`}></i>
-                                </button>
-                                <button className="hover:text-gray-500 transition">
-                                    <i className="fa-regular fa-comment"></i>
-                                </button>
-                                <button className="hover:text-gray-500 transition">
-                                    <i className="fa-regular fa-paper-plane"></i>
+                                <button type="button" onclick="addToCart(${product.id})" aria-label="Savatga qo'shish" class="w-9 h-9 rounded-full border border-gray-200 hover:border-uzum hover:bg-uzum hover:text-white text-uzum-ink flex items-center justify-center transition shrink-0 cursor-pointer shadow-2xs">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
                                 </button>
                             </div>
-                            <button onClick={onSave} className="hover:text-gray-500 transition">
-                                <i className={`${post.isSaved ? 'fa-solid fa-bookmark text-black dark:text-white' : 'fa-regular fa-bookmark'}`}></i>
-                            </button>
                         </div>
-
-                        <p className="font-semibold text-sm">
-                            {post.likesCount.toLocaleString('uz-UZ')} ta yoqdi
-                        </p>
-
-                        <div className="text-sm space-x-2">
-                            <span className="font-semibold">{post.username}</span>
-                            <span className="text-gray-800 dark:text-gray-200">{post.caption}</span>
-                        </div>
-
-                        {post.comments.length > 0 && (
-                            <div className="space-y-1 pt-1">
-                                {post.comments.map(c => (
-                                    <div key={c.id} className="text-sm flex justify-between">
-                                        <p><span className="font-semibold mr-2">{c.username}</span>{c.text}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wider">{post.timeAgo}</p>
-                    </div>
-
-                    <form onSubmit={handleSubmitComment} className="border-t dark:border-neutral-800 p-3 flex items-center space-x-3">
-                        <i className="fa-regular fa-face-smile text-xl text-gray-400 cursor-pointer"></i>
-                        <input 
-                            type="text" 
-                            placeholder="Izoh qoldiring..." 
-                            value={commentInput}
-                            onChange={(e) => setCommentInput(e.target.value)}
-                            className="flex-1 bg-transparent border-none text-sm focus:outline-none"
-                        />
-                        <button 
-                            type="submit" 
-                            disabled={!commentInput.trim()}
-                            className="text-sm font-semibold text-blue-500 disabled:opacity-40"
-                        >
-                            Joylash
-                        </button>
-                    </form>
-
-                </div>
-            );
+                    </article>
+                `;
+            }).join("");
         }
 
-        // --- REELS VIEW COMPONENT ---
-        function ReelsView({ reels, setReels }) {
-            return (
-                <div className="h-[calc(100vh-4rem)] md:h-screen w-full flex justify-center items-center py-2 sm:py-6 overflow-hidden">
-                    <div className="w-full max-w-sm h-full snap-y snap-mandatory overflow-y-scroll no-scrollbar rounded-2xl shadow-2xl bg-black border dark:border-neutral-800">
-                        {reels.map(reel => (
-                            <ReelItem key={reel.id} reel={reel} setReels={setReels} />
-                        ))}
-                    </div>
-                </div>
-            );
+        // Saralanganlar (Wishlist)
+        function toggleWishlist(id) {
+            const idx = wishlist.indexOf(id);
+            if (idx >= 0) {
+                wishlist.splice(idx, 1);
+                showToast("Saralanganlardan olib tashlandi");
+            } else {
+                wishlist.push(id);
+                showToast("Saralanganlarga qo'shildi");
+            }
+            document.getElementById("wishlistBadge").textContent = wishlist.length;
+            renderProducts();
         }
 
-        function ReelItem({ reel, setReels }) {
-            const videoRef = useRef(null);
-            const [isPlaying, setIsPlaying] = useState(true);
-            const [isMuted, setIsMuted] = useState(false);
+        // Savatcha (Cart) amallari
+        function addToCart(id) {
+            const product = productsData.find(p => p.id === id);
+            if (!product) return;
 
-            useEffect(() => {
-                const observer = new IntersectionObserver(
-                    ([entry]) => {
-                        if (entry.isIntersecting && videoRef.current) {
-                            videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-                        } else if (videoRef.current) {
-                            videoRef.current.pause();
-                            setIsPlaying(false);
-                        }
-                    },
-                    { threshold: 0.7 }
-                );
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI();
+            showToast("Mahsulot savatga qo'shildi");
+        }
 
-                if (videoRef.current) {
-                    observer.observe(videoRef.current);
-                }
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.id !== id);
+            }
+            updateCartUI();
+        }
 
-                return () => observer.disconnect();
-            }, []);
+        function applyPromoCode() {
+            const input = document.getElementById("promoInput");
+            const code = input.value.trim().toUpperCase();
+            const msgEl = document.getElementById("promoStatusMsg");
 
-            const togglePlay = () => {
-                if (videoRef.current) {
-                    if (isPlaying) {
-                        videoRef.current.pause();
-                        setIsPlaying(false);
-                    } else {
-                        videoRef.current.play();
-                        setIsPlaying(true);
-                    }
-                }
-            };
+            if (!code) {
+                promoApplied = false;
+                msgEl.classList.add("hidden");
+                updateCartUI();
+                showToast("Promo-kod maydonini to'ldiring");
+                return;
+            }
 
-            const toggleLikeReel = () => {
-                setReels(prev => prev.map(r => r.id === reel.id ? { ...r, isLiked: !r.isLiked } : r));
-            };
+            if (code === "UZUM10") {
+                promoApplied = true;
+                msgEl.textContent = "✓ UZUM10 promo-kodi faollashtirildi (10% chegirma)";
+                msgEl.classList.remove("hidden");
+                showToast("UZUM10 promo-kodi qo'llandi — 10% chegirma!");
+            } else {
+                promoApplied = false;
+                msgEl.classList.add("hidden");
+                showToast("Noto'g'ri promo-kod. Sinab ko'ring: UZUM10");
+            }
+            updateCartUI();
+        }
 
-            return (
-                <div className="relative w-full h-full snap-start bg-black flex items-center justify-center overflow-hidden flex-shrink-0">
-                    <video 
-                        ref={videoRef}
-                        src={reel.videoUrl} 
-                        loop 
-                        muted={isMuted}
-                        playsInline
-                        onClick={togglePlay}
-                        className="w-full h-full object-cover cursor-pointer"
-                    />
+        function applyPromoFromHero() {
+            promoApplied = true;
+            document.getElementById("promoInput").value = "UZUM10";
+            const msgEl = document.getElementById("promoStatusMsg");
+            msgEl.textContent = "✓ UZUM10 promo-kodi faollashtirildi (10% chegirma)";
+            msgEl.classList.remove("hidden");
+            updateCartUI();
+            showToast("UZUM10 promo-kodi faollashtirildi!");
+        }
 
-                    <button 
-                        onClick={() => setIsMuted(!isMuted)}
-                        className="absolute top-4 right-4 bg-black/50 text-white rounded-full w-9 h-9 flex items-center justify-center backdrop-blur-md z-20"
-                    >
-                        <i className={`fa-solid ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high'}`}></i>
-                    </button>
+        function getCartTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+            const discount = promoApplied ? Math.round(subtotal * 0.1) : 0;
+            const total = Math.max(0, subtotal - discount);
+            return { subtotal, discount, total };
+        }
 
-                    {!isPlaying && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none z-10">
-                            <i className="fa-solid fa-play text-white text-6xl opacity-80"></i>
-                        </div>
-                    )}
+        function updateCartUI() {
+            const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+            const { subtotal, discount, total } = getCartTotals();
 
-                    <div className="absolute bottom-0 left-0 right-14 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 text-white space-y-3">
-                        <div className="flex items-center space-x-3">
-                            <img src={reel.userAvatar} className="w-9 h-9 rounded-full border-2 border-white object-cover" />
-                            <span className="font-bold text-sm">{reel.username}</span>
-                            <button className="border border-white/80 text-xs px-3 py-1 rounded-full font-semibold hover:bg-white hover:text-black transition">
-                                Kuzatish
-                            </button>
-                        </div>
+            document.getElementById("cartBadge").textContent = totalCount;
+            document.getElementById("drawerCountLabel").textContent = `(${totalCount})`;
+            document.getElementById("cartSubtotalText").textContent = formatUZS(subtotal);
+            document.getElementById("cartTotalText").textContent = formatUZS(total);
+            document.getElementById("checkoutFinalTotal").textContent = formatUZS(total);
 
-                        <p className="text-xs text-gray-200 line-clamp-2">{reel.caption}</p>
+            const discountRow = document.getElementById("cartDiscountRow");
+            const discountText = document.getElementById("cartDiscountText");
+            if (promoApplied && subtotal > 0) {
+                discountRow.classList.remove("hidden");
+                discountText.textContent = `-${formatUZS(discount)}`;
+            } else {
+                discountRow.classList.add("hidden");
+            }
 
-                        <div className="flex items-center space-x-2 text-xs text-gray-300">
-                            <i className="fa-solid fa-music text-[10px]"></i>
-                            <span className="truncate w-44">{reel.audioTrack}</span>
-                        </div>
+            const listEl = document.getElementById("cartItemsList");
+            if (cart.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center py-14">
+                        <p class="text-base font-bold text-uzum-ink mb-1">Savatingiz hozircha bo'sh</p>
+                        <p class="text-xs text-uzum-muted">Katalogdan yoqqan mahsulotni savatga qo'shing.</p>
                     </div>
+                `;
+                return;
+            }
 
-                    <div className="absolute right-3 bottom-8 flex flex-col items-center space-y-5 text-white z-20">
-                        <button onClick={toggleLikeReel} className="flex flex-col items-center group">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition">
-                                <i className={`fa-solid fa-heart text-2xl ${reel.isLiked ? 'text-red-500' : 'text-white'}`}></i>
-                            </div>
-                            <span className="text-xs font-semibold mt-1">{reel.likes}</span>
-                        </button>
-
-                        <button className="flex flex-col items-center group">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition">
-                                <i className="fa-solid fa-comment text-2xl"></i>
-                            </div>
-                            <span className="text-xs font-semibold mt-1">{reel.comments}</span>
-                        </button>
-
-                        <button className="flex flex-col items-center group">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition">
-                                <i className="fa-solid fa-paper-plane text-2xl"></i>
-                            </div>
-                            <span className="text-xs font-semibold mt-1">{reel.shares}</span>
-                        </button>
-
-                        <div className="w-8 h-8 rounded-full border-2 border-white overflow-hidden animate-spin-disc mt-2">
-                            <img src={reel.userAvatar} className="w-full h-full object-cover" />
-                        </div>
+            listEl.innerHTML = cart.map(item => `
+                <div class="flex items-center gap-3 bg-white p-3 rounded-2xl border border-gray-100 shadow-2xs">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br ${item.bgGrad} flex items-center justify-center shrink-0 p-1">
+                        ${item.svg.replace(/w-24 h-24 sm:w-28 sm:h-28/g, "w-12 h-12")}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-xs sm:text-sm font-semibold text-uzum-ink line-clamp-2 mb-1">${item.title}</h4>
+                        <div class="text-xs sm:text-sm font-extrabold text-uzum">${formatUZS(item.price * item.qty)}</div>
+                    </div>
+                    <div class="flex items-center gap-2 bg-gray-100 px-2.5 py-1.5 rounded-xl shrink-0">
+                        <button type="button" onclick="changeQty(${item.id}, -1)" class="font-bold text-sm text-uzum-ink hover:text-uzum px-1 cursor-pointer">−</button>
+                        <span class="text-xs font-bold min-w-[14px] text-center">${item.qty}</span>
+                        <button type="button" onclick="changeQty(${item.id}, 1)" class="font-bold text-sm text-uzum-ink hover:text-uzum px-1 cursor-pointer">+</button>
                     </div>
                 </div>
-            );
+            `).join("");
         }
 
-        // --- STORY VIEWER MODAL ---
-        function StoryViewerModal({ stories, activeStoryIndex, setActiveStoryIndex }) {
-            const story = stories[activeStoryIndex];
-            const [isMuted, setIsMuted] = useState(false);
-            const videoRef = useRef(null);
+        function openCartDrawer() {
+            document.getElementById("cartDrawerOverlay").classList.remove("hidden");
+        }
 
-            useEffect(() => {
-                const timer = setTimeout(() => {
-                    if (activeStoryIndex < stories.length - 1) {
-                        setActiveStoryIndex(activeStoryIndex + 1);
-                    } else {
-                        setActiveStoryIndex(null);
-                    }
-                }, 5000);
-                return () => clearTimeout(timer);
-            }, [activeStoryIndex]);
+        function closeCartDrawer() {
+            document.getElementById("cartDrawerOverlay").classList.add("hidden");
+        }
 
-            if (!story) return null;
+        // Buyurtma rasmiylashtirish (Checkout Modal)
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showToast("Avval savatga mahsulot qo'shing!");
+                return;
+            }
+            closeCartDrawer();
+            document.getElementById("checkoutModal").classList.remove("hidden");
+        }
 
-            return (
-                <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-2 sm:p-4 backdrop-blur-lg">
-                    <button 
-                        onClick={() => setActiveStoryIndex(null)}
-                        className="absolute top-6 right-6 text-white text-3xl z-50 hover:opacity-75"
-                    >
-                        <i className="fa-solid fa-xmark"></i>
-                    </button>
+        function closeCheckoutModal() {
+            document.getElementById("checkoutModal").classList.add("hidden");
+        }
 
-                    <div className="relative w-full max-w-sm h-[82vh] bg-neutral-900 rounded-2xl overflow-hidden shadow-2xl flex flex-col justify-between border dark:border-neutral-800">
-                        <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/80 to-transparent z-20 space-y-3">
-                            <div className="w-full bg-white/30 h-1 rounded-full overflow-hidden">
-                                <div key={story.id} className="bg-white h-full animate-progress"></div>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-3">
-                                    <img src={story.avatar} className="w-8 h-8 rounded-full object-cover border border-white" />
-                                    <span className="text-white text-sm font-semibold">{story.username}</span>
-                                    <span className="text-white/70 text-xs">{story.time}</span>
-                                </div>
-                                {story.type === 'video' && (
-                                    <button onClick={() => setIsMuted(!isMuted)} className="text-white text-base">
-                                        <i className={`fa-solid ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high'}`}></i>
-                                    </button>
-                                )}
-                            </div>
+        function submitOrder(event) {
+            event.preventDefault();
+            const name = document.getElementById("customerName").value.trim();
+            const phone = document.getElementById("customerPhone").value.trim();
+            const pickup = document.getElementById("pickupPoint").value;
+            const payment = document.getElementById("paymentMethod").value;
+            const { total } = getCartTotals();
+
+            orders.unshift({
+                id: "UZ-" + Math.floor(100000 + Math.random() * 900000),
+                customer: name,
+                phone,
+                pickup,
+                payment,
+                total,
+                itemsCount: cart.reduce((s, i) => s + i.qty, 0)
+            });
+
+            cart = [];
+            promoApplied = false;
+            document.getElementById("promoInput").value = "";
+            document.getElementById("promoStatusMsg").classList.add("hidden");
+            document.getElementById("checkoutForm").reset();
+            closeCheckoutModal();
+            updateCartUI();
+
+            showToast(`Rahmat, ${name}! Buyurtmangiz qabul qilindi (${payment}).`);
+        }
+
+        // Buyurtmalarim oynasi
+        function openOrdersModal() {
+            const container = document.getElementById("ordersListContainer");
+            if (orders.length === 0) {
+                container.innerHTML = `<p class="text-center text-uzum-muted py-8">Hozircha rasmiylashtirilgan buyurtmalar yo‘q.</p>`;
+            } else {
+                container.innerHTML = orders.map(ord => `
+                    <div class="p-3.5 rounded-2xl border border-gray-100 bg-uzum-surface space-y-1">
+                        <div class="flex items-center justify-between font-bold text-xs">
+                            <span class="text-uzum">#${ord.id}</span>
+                            <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-md">Qabul qilindi</span>
                         </div>
-
-                        {story.type === 'video' ? (
-                            <video 
-                                ref={videoRef}
-                                src={story.mediaUrl} 
-                                autoPlay 
-                                loop 
-                                muted={isMuted} 
-                                playsInline
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <img src={story.mediaUrl} className="w-full h-full object-cover" alt="Story" />
-                        )}
-
-                        {activeStoryIndex > 0 && (
-                            <button 
-                                onClick={() => setActiveStoryIndex(activeStoryIndex - 1)}
-                                className="absolute left-2 top-1/2 -translate-y-1/2 text-white bg-black/40 rounded-full w-9 h-9 flex items-center justify-center z-20"
-                            >
-                                <i className="fa-solid fa-chevron-left"></i>
-                            </button>
-                        )}
-                        {activeStoryIndex < stories.length - 1 && (
-                            <button 
-                                onClick={() => setActiveStoryIndex(activeStoryIndex + 1)}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-white bg-black/40 rounded-full w-9 h-9 flex items-center justify-center z-20"
-                            >
-                                <i className="fa-solid fa-chevron-right"></i>
-                            </button>
-                        )}
-
-                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent z-20 flex items-center space-x-3">
-                            <input 
-                                type="text" 
-                                placeholder={`${story.username}ga javob...`}
-                                className="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/60 text-sm px-4 py-2 rounded-full focus:outline-none"
-                            />
-                            <button className="text-white text-xl"><i className="fa-regular fa-paper-plane"></i></button>
-                        </div>
+                        <p class="text-xs font-semibold text-uzum-ink">${ord.customer} • ${ord.phone}</p>
+                        <p class="text-[11px] text-uzum-muted">${ord.pickup} • ${ord.payment}</p>
+                        <p class="text-xs font-extrabold text-uzum-ink pt-1">Summa: ${formatUZS(ord.total)} (${ord.itemsCount} ta)</p>
                     </div>
-                </div>
-            );
+                `).join("");
+            }
+            document.getElementById("ordersModal").classList.remove("hidden");
         }
 
-        // --- CREATE POST MODAL ---
-        function CreatePostModal({ onClose, onCreate }) {
-            const [postType, setPostType] = useState('video');
-            const [mediaUrl, setMediaUrl] = useState(SAMPLE_VIDEOS.escapes);
-            const [caption, setCaption] = useState('');
-            const [location, setLocation] = useState('');
-            const [previewFile, setPreviewFile] = useState(null);
-
-            const handleFileUpload = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const objectUrl = URL.createObjectURL(file);
-                    setMediaUrl(objectUrl);
-                    setPreviewFile(file.name);
-                    if (file.type.startsWith('video/')) {
-                        setPostType('video');
-                    } else if (file.type.startsWith('image/')) {
-                        setPostType('image');
-                    }
-                }
-            };
-
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (!mediaUrl) return;
-                onCreate({ type: postType, mediaUrl, caption, location });
-            };
-
-            return (
-                <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-                    <div className="bg-white dark:bg-neutral-900 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col border dark:border-neutral-800">
-                        <div className="p-4 border-b dark:border-neutral-800 flex justify-between items-center">
-                            <button onClick={onClose} className="text-gray-500 hover:text-black dark:hover:text-white">Bekor qilish</button>
-                            <h3 className="font-bold text-base">Yangi post / Video yuklash</h3>
-                            <button onClick={handleSubmit} disabled={!mediaUrl} className="text-blue-500 font-bold text-sm disabled:opacity-40">Ulashish</button>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
-                            
-                            <div className="flex bg-gray-100 dark:bg-neutral-800 p-1 rounded-xl text-xs font-semibold">
-                                <button 
-                                    type="button" 
-                                    onClick={() => { setPostType('video'); setMediaUrl(SAMPLE_VIDEOS.escapes); }}
-                                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-2 ${postType === 'video' ? 'bg-white dark:bg-neutral-700 text-pink-500 shadow' : 'text-gray-500'}`}
-                                >
-                                    <i className="fa-solid fa-video"></i> Video / Reel
-                                </button>
-                                <button 
-                                    type="button" 
-                                    onClick={() => { setPostType('image'); setMediaUrl(''); }}
-                                    className={`flex-1 py-2 rounded-lg transition flex items-center justify-center gap-2 ${postType === 'image' ? 'bg-white dark:bg-neutral-700 text-blue-500 shadow' : 'text-gray-500'}`}
-                                >
-                                    <i className="fa-solid fa-image"></i> Rasm (Photo)
-                                </button>
-                            </div>
-
-                            <div className="border-2 border-dashed dark:border-neutral-700 rounded-xl p-4 text-center">
-                                <input 
-                                    type="file" 
-                                    accept={postType === 'video' ? 'video/*' : 'image/*'} 
-                                    onChange={handleFileUpload} 
-                                    className="hidden" 
-                                    id="file-upload"
-                                />
-                                <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center space-y-2">
-                                    <i className={`fa-solid ${postType === 'video' ? 'fa-film text-pink-500' : 'fa-cloud-arrow-up text-blue-500'} text-3xl`}></i>
-                                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                        {previewFile ? `Tanlandi: ${previewFile}` : `Kompyuterdan ${postType === 'video' ? 'video (.mp4)' : 'rasm'} faylini tanlang`}
-                                    </span>
-                                </label>
-                            </div>
-
-                            {postType === 'video' && (
-                                <div>
-                                    <label className="block text-xs font-semibold text-gray-500 mb-1">Yoki namuna videolardan birini tanlang:</label>
-                                    <select 
-                                        value={mediaUrl}
-                                        onChange={(e) => setMediaUrl(e.target.value)}
-                                        className="w-full bg-gray-100 dark:bg-neutral-800 p-2.5 rounded-xl text-xs border dark:border-neutral-700"
-                                    >
-                                        <option value={SAMPLE_VIDEOS.escapes}>1. High Speed Travel Reel (Chorvoq/Chimyon)</option>
-                                        <option value={SAMPLE_VIDEOS.blazes}>2. IT Startups & AI Tech Show</option>
-                                        <option value={SAMPLE_VIDEOS.bunny}>3. Buxoro & Samarqand Nature Loop</option>
-                                        <option value={SAMPLE_VIDEOS.joyrides}>4. UI Motion Design Tutorial</option>
-                                        <option value={SAMPLE_VIDEOS.meltdowns}>5. High Mountains Extreme Sports</option>
-                                        <option value={SAMPLE_VIDEOS.subaru}>6. Auto Show Test Drive 2026</option>
-                                        <option value={SAMPLE_VIDEOS.sintel}>7. Khiva Historical Heritage Animation</option>
-                                        <option value={SAMPLE_VIDEOS.tears}>8. Cyber Esports Tashkent Final</option>
-                                    </select>
-                                </div>
-                            )}
-
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 mb-1">Mediya URL havolasi</label>
-                                <input 
-                                    type="url" 
-                                    placeholder="https://..." 
-                                    value={mediaUrl}
-                                    onChange={(e) => setMediaUrl(e.target.value)}
-                                    className="w-full bg-gray-100 dark:bg-neutral-800 p-3 rounded-xl text-sm focus:outline-none border dark:border-neutral-700"
-                                />
-                            </div>
-
-                            {mediaUrl && (
-                                <div className="h-48 rounded-xl overflow-hidden bg-black flex items-center justify-center">
-                                    {postType === 'video' ? (
-                                        <video src={mediaUrl} controls className="h-full max-w-full object-cover" />
-                                    ) : (
-                                        <img src={mediaUrl} className="h-full object-cover" />
-                                    )}
-                                </div>
-                            )}
-
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 mb-1">Tavsif (Caption)</label>
-                                <textarea 
-                                    rows="2"
-                                    placeholder="Postingiz va video haqida yozing..."
-                                    value={caption}
-                                    onChange={(e) => setCaption(e.target.value)}
-                                    className="w-full bg-gray-100 dark:bg-neutral-800 p-3 rounded-xl text-sm focus:outline-none border dark:border-neutral-700 resize-none"
-                                ></textarea>
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 mb-1">Joylashuv</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Toshkent, O'zbekiston" 
-                                    value={location}
-                                    onChange={(e) => setLocation(e.target.value)}
-                                    className="w-full bg-gray-100 dark:bg-neutral-800 p-3 rounded-xl text-sm focus:outline-none border dark:border-neutral-700"
-                                />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            );
+        function closeOrdersModal() {
+            document.getElementById("ordersModal").classList.add("hidden");
         }
 
-        // --- EXPLORE VIEW ---
-        function ExploreView({ posts, setExploreActiveMedia }) {
-            const exploreItems = [
-                { id: 1, type: 'video', mediaUrl: SAMPLE_VIDEOS.escapes, likes: '42.4K', comments: '1,420' },
-                { id: 2, type: 'video', mediaUrl: SAMPLE_VIDEOS.meltdowns, likes: '38.1K', comments: '890' },
-                { id: 3, type: 'video', mediaUrl: SAMPLE_VIDEOS.blazes, likes: '54.9K', comments: '2,810' },
-                { id: 4, type: 'image', mediaUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600', likes: '15.6K', comments: '498' },
-                { id: 5, type: 'video', mediaUrl: SAMPLE_VIDEOS.joyrides, likes: '29.2K', comments: '1,350' },
-                { id: 6, type: 'video', mediaUrl: SAMPLE_VIDEOS.subaru, likes: '64.3K', comments: '2,210' },
-                { id: 7, type: 'video', mediaUrl: SAMPLE_VIDEOS.bunny, likes: '21.0K', comments: '780' },
-                { id: 8, type: 'video', mediaUrl: SAMPLE_VIDEOS.sintel, likes: '48.7K', comments: '1,620' },
-                { id: 9, type: 'image', mediaUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600', likes: '19.4K', comments: '640' },
-                { id: 10, type: 'video', mediaUrl: SAMPLE_VIDEOS.tears, likes: '82.1K', comments: '3,410' },
-                { id: 11, type: 'video', mediaUrl: SAMPLE_VIDEOS.bullrun, likes: '31.5K', comments: '980' },
-                { id: 12, type: 'video', mediaUrl: SAMPLE_VIDEOS.fun, likes: '71.2K', comments: '2,900' }
-            ];
+        // Tashqariga bosilganda menyu va modallarni yopish
+        document.addEventListener("click", (e) => {
+            const catalogBtn = document.getElementById("catalogBtn");
+            const catalogDropdown = document.getElementById("catalogDropdown");
+            if (catalogBtn && catalogDropdown && !catalogBtn.contains(e.target) && !catalogDropdown.contains(e.target)) {
+                closeCatalogMenu();
+            }
+        });
 
-            return (
-                <div className="max-w-screen-lg mx-auto p-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold flex items-center gap-2">
-                            <span>Kashf etish (Explore Grid)</span>
-                            <span className="text-xs bg-pink-600 text-white px-2.5 py-0.5 rounded-full font-semibold">12+ Video & Fotosuratlar</span>
-                        </h2>
-                    </div>
+        document.getElementById("cartDrawerOverlay").addEventListener("click", (e) => {
+            if (e.target.id === "cartDrawerOverlay") closeCartDrawer();
+        });
+        document.getElementById("checkoutModal").addEventListener("click", (e) => {
+            if (e.target.id === "checkoutModal") closeCheckoutModal();
+        });
+        document.getElementById("ordersModal").addEventListener("click", (e) => {
+            if (e.target.id === "ordersModal") closeOrdersModal();
+        });
 
-                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
-                        {exploreItems.map((item) => (
-                            <div 
-                                key={item.id} 
-                                onClick={() => setExploreActiveMedia(item)}
-                                className="relative aspect-square bg-gray-200 dark:bg-neutral-800 group rounded-xl overflow-hidden cursor-pointer shadow-sm"
-                            >
-                                {item.type === 'video' ? (
-                                    <>
-                                        <video src={item.mediaUrl} muted className="w-full h-full object-cover" />
-                                        <span className="absolute top-2.5 right-2.5 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs backdrop-blur-sm">
-                                            <i className="fa-solid fa-play ml-0.5"></i>
-                                        </span>
-                                    </>
-                                ) : (
-                                    <img src={item.mediaUrl} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                                )}
-
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-6 text-white font-bold">
-                                    <span className="flex items-center space-x-1.5"><i className="fa-solid fa-heart text-red-500"></i> <span>{item.likes}</span></span>
-                                    <span className="flex items-center space-x-1.5"><i className="fa-solid fa-comment"></i> <span>{item.comments}</span></span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        // --- MEDIA LIGHTBOX MODAL ---
-        function MediaLightboxModal({ media, onClose }) {
-            return (
-                <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 backdrop-blur-md">
-                    <button onClick={onClose} className="absolute top-6 right-6 text-white text-3xl hover:opacity-75">
-                        <i className="fa-solid fa-xmark"></i>
-                    </button>
-                    <div className="w-full max-w-3xl bg-black rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center border dark:border-neutral-800">
-                        {media.type === 'video' ? (
-                            <video src={media.mediaUrl} controls autoPlay loop className="max-h-[82vh] w-full object-contain" />
-                        ) : (
-                            <img src={media.mediaUrl} className="max-h-[82vh] w-full object-contain" />
-                        )}
-                    </div>
-                </div>
-            );
-        }
-
-        // --- MESSAGES VIEW ---
-        function MessagesView({ chats, setChats, activeChatId, setActiveChatId, currentUser }) {
-            const activeChat = chats.find(c => c.id === activeChatId) || chats[0];
-            const [messageText, setMessageText] = useState('');
-
-            const handleSendMessage = (e) => {
-                e.preventDefault();
-                if (!messageText.trim()) return;
-
-                const newMsg = {
-                    id: Date.now(),
-                    sender: currentUser.username,
-                    text: messageText,
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-
-                setChats(chats.map(chat => {
-                    if (chat.id === activeChatId) {
-                        return { ...chat, messages: [...chat.messages, newMsg] };
-                    }
-                    return chat;
-                }));
-
-                setMessageText('');
-            };
-
-            return (
-                <div className="max-w-screen-xl mx-auto h-[calc(100vh-4rem)] md:h-screen p-2 sm:p-6">
-                    <div className="bg-white dark:bg-black border dark:border-neutral-800 rounded-2xl h-full flex overflow-hidden shadow-sm">
-                        <div className="w-full md:w-80 border-r dark:border-neutral-800 flex flex-col">
-                            <div className="p-4 border-b dark:border-neutral-800 flex justify-between items-center">
-                                <h2 className="font-bold text-lg">{currentUser.username}</h2>
-                                <i className="fa-regular fa-pen-to-square text-xl cursor-pointer"></i>
-                            </div>
-
-                            <div className="flex-1 overflow-y-auto divide-y dark:divide-neutral-900">
-                                {chats.map(chat => (
-                                    <div 
-                                        key={chat.id} 
-                                        onClick={() => setActiveChatId(chat.id)}
-                                        className={`p-3.5 flex items-center space-x-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-900 transition ${activeChatId === chat.id ? 'bg-gray-100 dark:bg-neutral-800/70' : ''}`}
-                                    >
-                                        <div className="relative">
-                                            <img src={chat.avatar} className="w-12 h-12 rounded-full object-cover" />
-                                            {chat.online && <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-black rounded-full"></span>}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-sm truncate">{chat.name}</p>
-                                            <p className="text-xs text-gray-500 truncate">{chat.messages[chat.messages.length - 1]?.text}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {activeChat ? (
-                            <div className="hidden md:flex flex-1 flex-col justify-between">
-                                <div className="p-4 border-b dark:border-neutral-800 flex justify-between items-center">
-                                    <div className="flex items-center space-x-3">
-                                        <img src={activeChat.avatar} className="w-10 h-10 rounded-full object-cover" />
-                                        <div>
-                                            <p className="font-bold text-sm">{activeChat.name}</p>
-                                            <p className="text-xs text-gray-400">{activeChat.online ? 'Tarmoqda' : 'Yaqinda bo\'lgan'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex-1 p-4 overflow-y-auto space-y-3">
-                                    {activeChat.messages.map(msg => (
-                                        <div key={msg.id} className={`flex ${msg.sender === currentUser.username ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`max-w-xs px-4 py-2.5 rounded-2xl text-sm ${
-                                                msg.sender === currentUser.username ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-200 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 rounded-bl-none'
-                                            }`}>
-                                                <p>{msg.text}</p>
-                                                <span className="text-[9px] block text-right mt-1 opacity-70">{msg.time}</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <form onSubmit={handleSendMessage} className="p-4 border-t dark:border-neutral-800 flex items-center space-x-3">
-                                    <input 
-                                        type="text" 
-                                        placeholder="Xabar yozing..." 
-                                        value={messageText}
-                                        onChange={(e) => setMessageText(e.target.value)}
-                                        className="flex-1 bg-gray-100 dark:bg-neutral-800 px-4 py-2.5 rounded-full text-sm focus:outline-none"
-                                    />
-                                    <button type="submit" disabled={!messageText.trim()} className="text-blue-500 font-bold text-sm disabled:opacity-40">Yuborish</button>
-                                </form>
-                            </div>
-                        ) : (
-                            <div className="hidden md:flex flex-1 items-center justify-center text-gray-400">
-                                Xabar tanlanmagan
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
-        }
-
-        // --- NOTIFICATIONS VIEW ---
-        function NotificationsView({ notifications }) {
-            return (
-                <div className="max-w-screen-md mx-auto p-4 sm:p-6 space-y-4">
-                    <h2 className="text-xl font-bold border-b dark:border-neutral-800 pb-3">Bildirishnomalar</h2>
-                    <div className="space-y-3">
-                        {notifications.map(n => (
-                            <div key={n.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-neutral-900 border dark:border-neutral-800/50">
-                                <div className="flex items-center space-x-3">
-                                    <img src={n.avatar} className="w-11 h-11 rounded-full object-cover" />
-                                    <div className="text-sm">
-                                        <span className="font-semibold mr-1.5">{n.username}</span>
-                                        <span className="text-gray-700 dark:text-gray-300">{n.content}</span>
-                                        <span className="text-xs text-gray-400 ml-2">{n.time}</span>
-                                    </div>
-                                </div>
-                                {n.postImage && <img src={n.postImage} className="w-10 h-10 rounded object-cover" />}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        // --- PROFILE VIEW ---
-        function ProfileView({ currentUser, posts, allPosts, setExploreActiveMedia, handleLogout }) {
-            const [activeProfileTab, setActiveProfileTab] = useState('posts');
-
-            return (
-                <div className="max-w-screen-md mx-auto p-4 sm:p-8 space-y-8">
-                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-12">
-                        <img src={currentUser.avatar} className="w-24 h-24 sm:w-36 sm:h-36 rounded-full object-cover border-2 border-pink-500 p-1" />
-                        <div className="flex-1 space-y-4 text-center sm:text-left">
-                            <div className="flex flex-col sm:flex-row items-center gap-3">
-                                <h1 className="text-xl font-normal flex items-center gap-1">
-                                    @{currentUser.username}
-                                    {currentUser.isVerified && <i className="fa-solid fa-circle-check text-blue-500 text-sm"></i>}
-                                </h1>
-                                <div className="flex items-center space-x-2">
-                                    <button className="bg-gray-100 dark:bg-neutral-800 px-4 py-1.5 rounded-lg text-sm font-semibold">Tahrirlash</button>
-                                    <button 
-                                        onClick={handleLogout}
-                                        className="bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-red-200 transition flex items-center gap-1.5"
-                                    >
-                                        <i className="fa-solid fa-right-from-bracket"></i>
-                                        <span>Chiqish</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="flex justify-center sm:justify-start space-x-8 text-sm">
-                                <div><span className="font-bold">{currentUser.postsCount}</span> postlar</div>
-                                <div><span className="font-bold">{currentUser.followersCount}</span> obunachilar</div>
-                                <div><span className="font-bold">{currentUser.followingCount}</span> obunalar</div>
-                            </div>
-
-                            {/* Registered User Profile Details Box */}
-                            <div className="bg-gray-50 dark:bg-neutral-900 border dark:border-neutral-800 p-4 rounded-xl text-xs space-y-2 text-left">
-                                <div className="flex items-center space-x-2 text-gray-800 dark:text-gray-200 font-semibold text-sm">
-                                    <i className="fa-solid fa-id-card text-pink-500"></i>
-                                    <span>{currentUser.name} ({currentUser.firstName} {currentUser.lastName})</span>
-                                </div>
-                                <div className="flex items-center space-x-2 text-gray-500">
-                                    <i className="fa-solid fa-phone text-blue-500"></i>
-                                    <span>Telefon: {currentUser.phone}</span>
-                                </div>
-                                <div className="flex items-center space-x-2 text-gray-500">
-                                    <i className="fa-regular fa-envelope text-purple-500"></i>
-                                    <span>E-mail: {currentUser.email}</span>
-                                </div>
-                            </div>
-
-                            <div className="text-sm space-y-1">
-                                <p className="whitespace-pre-line text-gray-700 dark:text-gray-300">{currentUser.bio}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Profile Tabs */}
-                    <div className="border-t dark:border-neutral-800 pt-2">
-                        <div className="flex justify-center space-x-12 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                            <button 
-                                onClick={() => setActiveProfileTab('posts')}
-                                className={`flex items-center space-x-2 py-2 border-t-2 ${activeProfileTab === 'posts' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent'}`}
-                            >
-                                <i className="fa-solid fa-border-all"></i>
-                                <span>Postlar</span>
-                            </button>
-                            <button 
-                                onClick={() => setActiveProfileTab('reels')}
-                                className={`flex items-center space-x-2 py-2 border-t-2 ${activeProfileTab === 'reels' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent'}`}
-                            >
-                                <i className="fa-solid fa-clapperboard text-pink-500"></i>
-                                <span>Reels (Videolar)</span>
-                            </button>
-                            <button 
-                                onClick={() => setActiveProfileTab('saved')}
-                                className={`flex items-center space-x-2 py-2 border-t-2 ${activeProfileTab === 'saved' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent'}`}
-                            >
-                                <i className="fa-regular fa-bookmark"></i>
-                                <span>Saqlanganlar</span>
-                            </button>
-                        </div>
-
-                        {/* Grid Display */}
-                        <div className="grid grid-cols-3 gap-1 sm:gap-4 mt-4">
-                            {(activeProfileTab === 'posts' 
-                                ? posts 
-                                : activeProfileTab === 'reels' 
-                                ? allPosts.filter(p => p.type === 'video') 
-                                : allPosts.filter(p => p.isSaved)
-                            ).map(post => (
-                                <div 
-                                    key={post.id} 
-                                    onClick={() => setExploreActiveMedia(post)}
-                                    className="relative aspect-square bg-gray-200 dark:bg-neutral-800 group rounded-lg overflow-hidden cursor-pointer"
-                                >
-                                    {post.type === 'video' ? (
-                                        <>
-                                            <video src={post.mediaUrl} className="w-full h-full object-cover" />
-                                            <span className="absolute top-2 right-2 text-white bg-black/60 rounded-full p-1 text-xs backdrop-blur-sm">
-                                                <i className="fa-solid fa-play ml-0.5"></i>
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <img src={post.mediaUrl} className="w-full h-full object-cover" />
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // Render React DOM cleanly
-        try {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
-        } catch(err) {
-            console.error("Render Error: ", err);
-        }
+        // Boshlang'ich render
+        renderProducts();
+        updateCartUI();
     </script>
 </body>
+
 </html>
